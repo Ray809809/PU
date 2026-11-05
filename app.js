@@ -206,6 +206,61 @@ const SEED_AUDIT_LOGS = [
   }
 ];
 
+// Endpoint Database Firebase Realtime PUPR
+const FIREBASE_DB_URL = 'https://pupr-portal-default-rtdb.firebaseio.com';
+
+// Sinkronisasi Laporan Otomatis ke Cloud Firebase
+async function syncReportToCloud(report) {
+  if (!report || !report.ticket) return;
+  try {
+    const cleanKey = report.ticket.replace(/[.#$[\]]/g, '_');
+    await fetch(`${FIREBASE_DB_URL}/reports/${cleanKey}.json`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(report)
+    });
+  } catch (err) {
+    console.warn('Gagal sync ke cloud:', err);
+  }
+}
+
+// Tarik Data Realtime dari Cloud Firebase
+async function fetchCloudReports() {
+  try {
+    const res = await fetch(`${FIREBASE_DB_URL}/reports.json`);
+    if (!res.ok) return null;
+    const data = await res.json();
+    if (!data) return [];
+    return Object.values(data).map(normalizeReport).filter(Boolean);
+  } catch (err) {
+    return null;
+  }
+}
+
+// Inisialisasi Listener Realtime dari Cloud Firebase
+function initCloudRealtimeListener() {
+  // Polling periodik ringan setiap 3 detik untuk sinkronisasi realtime cross-device
+  setInterval(async () => {
+    const cloudReports = await fetchCloudReports();
+    if (cloudReports && Array.isArray(cloudReports)) {
+      const local = Storage.getPublicReports();
+      // Bandingkan apakah ada data baru atau status yang berubah
+      if (JSON.stringify(cloudReports) !== JSON.stringify(local)) {
+        localStorage.setItem('pupr_public_reports', JSON.stringify(cloudReports));
+        if (typeof renderInboxPublicPage === 'function') renderInboxPublicPage();
+        if (typeof updateInboxBadge === 'function') updateInboxBadge();
+        if (typeof renderNotifList === 'function') renderNotifList();
+        if (typeof renderPublicReportsTable === 'function') renderPublicReportsTable();
+      }
+    }
+  }, 3000);
+}
+
+// Jalankan listener cloud saat file dimuat
+if (typeof window !== 'undefined') {
+  initCloudRealtimeListener();
+}
+
 // Penyimpanan Lokal (LocalStorage) dengan Auto-Migration
 const Storage = {
   getUsers() {
@@ -348,6 +403,8 @@ const Storage = {
     const list = this.getPublicReports();
     list.unshift(validReport);
     localStorage.setItem('pupr_public_reports', JSON.stringify(list));
+    // Kirim langsung ke Cloud Firebase agar HP lain / Laptop Admin langsung menerima
+    syncReportToCloud(validReport);
   },
 
   getResetRequests() {
@@ -2719,6 +2776,8 @@ window.toggleAccSingle = function (ticket) {
   const willApprove = !(target.status.includes('Selesai') || target.status.includes('Disetujui'));
   target.status = willApprove ? 'Selesai Ditangani' : 'Menunggu Verifikasi Dinas';
   localStorage.setItem('pupr_public_reports', JSON.stringify(reports));
+  // Sinkronkan hasil ACC ke Cloud Firebase
+  syncReportToCloud(target);
 
   Storage.addAuditLog(
     currentUser.id,
@@ -2831,6 +2890,8 @@ window.updatePublicReportStatus = function (ticket, newStatus) {
 
   target.status = newStatus;
   localStorage.setItem('pupr_public_reports', JSON.stringify(reports));
+  // Sinkronkan perubahan status ke Cloud Firebase agar tamu di HP langsung melihat status barunya
+  syncReportToCloud(target);
 
   Storage.addAuditLog(
     currentUser.id,
