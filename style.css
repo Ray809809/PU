@@ -226,10 +226,16 @@ body {
 /* ================= Container Utama ================= */
 .main-wrapper {
   flex: 1;
-  max-width: 1140px;
+  max-width: 98%;
   width: 100%;
   margin: 0 auto;
-  padding: 2rem 1.5rem;
+  padding: 1rem 1.25rem;
+}
+
+@media (min-width: 1600px) {
+  .main-wrapper {
+    max-width: 1600px;
+  }
 }
 
 /* Section visibility */
@@ -1162,28 +1168,32 @@ body {
 /* Tabel Pegawai Formal */
 .table-wrapper {
   overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border-radius: 0 0 var(--radius-md) var(--radius-md);
 }
 
 .pupr-table {
   width: 100%;
+  min-width: 1100px;
   border-collapse: collapse;
   text-align: left;
-  font-size: 0.875rem;
+  font-size: 0.85rem;
 }
 
 .pupr-table th {
   background-color: #F1F5F9;
   color: var(--text-secondary);
-  padding: 0.75rem 1.25rem;
+  padding: 0.75rem 0.85rem;
   font-weight: 700;
   font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.04em;
   border-bottom: 1px solid var(--border-color);
+  white-space: nowrap;
 }
 
 .pupr-table td {
-  padding: 0.9rem 1.25rem;
+  padding: 0.75rem 0.85rem;
   border-bottom: 1px solid var(--border-subtle);
   color: var(--text-primary);
   vertical-align: middle;

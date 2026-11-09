@@ -83,19 +83,13 @@ function normalizeReport(r) {
   };
 }
 
-// Daftar Unit Kerja Resmi di Lingkungan PU Pekerjaan Umum
+// Daftar 5 Bidang Teknis Utama PU Pekerjaan Umum
 const DAFTAR_UNIT_PUPR = [
   'Ditjen Bina Marga',
   'Ditjen Sumber Daya Air',
   'Ditjen Cipta Karya',
   'Ditjen Perumahan',
-  'Ditjen Bina Konstruksi',
-  'Ditjen Pembiayaan Infrastruktur',
-  'Sekretariat Jenderal',
-  'Inspektorat Jenderal',
-  'Badan Pengembangan SDM (BPSDM)',
-  'Balai Besar Pelaksanaan Jalan Nasional (BBPJN)',
-  'Balai Wilayah Sungai (BWS)'
+  'Ditjen Bina Konstruksi'
 ];
 
 // Data Awal Pegawai PUPR (3 Peran: Super Admin, Bidang, Sakres)
@@ -706,7 +700,7 @@ function getRoleBadge(role) {
 // Notifikasi Sistem Toast
 function showToast(title, message, type = 'info') {
   const toast = document.createElement('div');
-  
+
   // Tentukan warna khusus jika status notifikasi berupa ACC / Proses / Belum ACC
   let customStyle = '';
   if (type === 'belum_acc' || type === 'error' || type === 'danger') {
@@ -863,21 +857,21 @@ function showView(view) {
 
     // Tampilkan info user di header atas
     elements.navUserPanel.style.display = 'flex';
-    elements.navAvatar.textContent = getInitials(currentUser.nama);
     elements.navUserName.textContent = currentUser.nama;
     elements.navUserUnit.textContent = `${currentUser.role} • ${currentUser.unit}`;
 
     // Tampilkan info user di kartu Sidebar
-    if (elements.sidebarAvatar) elements.sidebarAvatar.textContent = getInitials(currentUser.nama);
     if (elements.sidebarUserName) elements.sidebarUserName.textContent = currentUser.nama;
     if (elements.sidebarUserRole) elements.sidebarUserRole.innerHTML = getRoleBadge(currentUser.role);
 
     // Tampilkan kartu sambutan hero
-    elements.heroAvatar.textContent = getInitials(currentUser.nama);
     elements.heroUserName.textContent = currentUser.nama;
     elements.heroUserId.textContent = currentUser.id;
     elements.heroUserUnit.textContent = currentUser.unit;
     elements.heroUserRole.innerHTML = getRoleBadge(currentUser.role);
+
+    // Render Avatar / Foto Profil Pengguna
+    updateUserAvatarDisplays(currentUser.photo, currentUser.nama);
 
     // Konfigurasi Hak Akses 3 Peran: Super Admin, Bidang, Sakres
     const isSuperAdmin = currentUser.role === ROLES.SUPER_ADMIN;
@@ -1356,7 +1350,43 @@ function renderUnitsGrid() {
   }).join('');
 }
 
-// Render Data di Halaman Profil Saya
+function updateUserAvatarDisplays(photoUrl, name) {
+  const initials = getInitials(name || (currentUser ? currentUser.nama : 'P'));
+  const avatarElements = [
+    elements.navAvatar,
+    elements.sidebarAvatar,
+    elements.heroAvatar,
+    document.getElementById('cardProfileAvatarImg'),
+    document.getElementById('profilePhotoPreview')
+  ];
+
+  avatarElements.forEach(el => {
+    if (!el) return;
+    if (photoUrl) {
+      el.innerHTML = `<img src="${photoUrl}" alt="${escapeHtml(name || '')}" style="width:100%; height:100%; object-fit:cover; border-radius:50%; display:block;">`;
+      el.style.padding = '0';
+    } else {
+      el.textContent = initials;
+      el.style.padding = '';
+    }
+  });
+}
+let tempProfilePhotoBase64 = null;
+
+window.handleProfilePhotoChange = function (input) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function (e) {
+    tempProfilePhotoBase64 = e.target.result;
+    const preview = document.getElementById('profilePhotoPreview');
+    if (preview) {
+      preview.innerHTML = `<img src="${tempProfilePhotoBase64}" alt="Foto Profil" style="width:100%; height:100%; object-fit:cover; border-radius:50%; display:block;">`;
+    }
+  };
+  reader.readAsDataURL(file);
+};
+
 function renderProfilePage() {
   if (!currentUser) return;
   if (elements.cardProfileId) elements.cardProfileId.textContent = currentUser.id;
@@ -1366,6 +1396,9 @@ function renderProfilePage() {
 
   if (elements.profileNama) elements.profileNama.value = currentUser.nama;
   if (elements.profileNewPw) elements.profileNewPw.value = '';
+
+  tempProfilePhotoBase64 = currentUser.photo || null;
+  updateUserAvatarDisplays(currentUser.photo, currentUser.nama);
 }
 
 // Simpan Perubahan Profil Mandiri
@@ -1379,10 +1412,12 @@ function handleProfileSave(e) {
     return;
   }
 
+  const fotoBaru = tempProfilePhotoBase64 || currentUser.photo || null;
+
   let users = Storage.getUsers();
   users = users.map((u) => {
     if (u.id === currentUser.id) {
-      const updated = { ...u, nama: namaBaru };
+      const updated = { ...u, nama: namaBaru, photo: fotoBaru };
       if (pwBaru && pwBaru.length >= 6) {
         updated.pw = pwBaru;
       }
@@ -1392,6 +1427,7 @@ function handleProfileSave(e) {
   });
 
   currentUser.nama = namaBaru;
+  currentUser.photo = fotoBaru;
   if (pwBaru && pwBaru.length >= 6) {
     currentUser.pw = pwBaru;
   }
@@ -1403,9 +1439,11 @@ function handleProfileSave(e) {
   elements.navUserName.textContent = namaBaru;
   elements.heroUserName.textContent = namaBaru;
   if (elements.sidebarUserName) elements.sidebarUserName.textContent = namaBaru;
+
+  updateUserAvatarDisplays(currentUser.photo, currentUser.nama);
   renderProfilePage();
 
-  showToast('Tersimpan', 'Profil akun Anda berhasil diperbarui.', 'success');
+  showToast('Tersimpan', 'Profil dan foto akun Anda berhasil diperbarui.', 'success');
 }
 
 // Render Tabel & Statistik Sesuai Peran
@@ -2089,11 +2127,11 @@ function handlePublicReportSubmit(e) {
   const applicantCategory = document.getElementById('reportApplicantCategory').value;
   const serviceType = document.getElementById('reportServiceType').value;
   const subject = document.getElementById('reportSubject').value.trim();
-  const location = document.getElementById('reportLocation').value.trim();
+  const location = document.getElementById('reportLocation').value.trim() || '-';
   const description = document.getElementById('reportDescription').value.trim();
   const surveyConsent = document.getElementById('reportSurveyConsent') ? document.getElementById('reportSurveyConsent').checked : false;
 
-  if (!reporterName || !contact || !gender || !email || !originAgency || !applicantCategory || !serviceType || !subject || !location || !description) {
+  if (!reporterName || !contact || !gender || !email || !originAgency || !applicantCategory || !serviceType || !subject || !description) {
     showToast('Validasi', 'Mohon lengkapi seluruh kolom formulir yang bertanda bintang (*).', 'error');
     return;
   }
@@ -2275,7 +2313,7 @@ function renderInboxPublicPage() {
     const isSuperAdmin = currentUser && currentUser.role === ROLES.SUPER_ADMIN;
     const currentUnit = r.targetUnit || r.unit || 'Belum Didisposisi';
 
-    // Kolom Disposisi Unit: Hanya Super Admin yang berhak menentukan/mengubah disposisi ke Bidang
+    // Kolom Disposisi Unit: Hanya Super Admin / PIC yang berhak menentukan/mengubah disposisi ke Bidang
     let disposisiHtml = '';
     if (isSuperAdmin) {
       const optionsHtml = DAFTAR_UNIT_PUPR.map(u => `
@@ -2287,10 +2325,10 @@ function renderInboxPublicPage() {
           <select onchange="updatePublicReportDisposisi('${escapeHtml(r.ticket)}', this.value)" 
             class="form-control" 
             style="font-size:0.75rem; padding:0.3rem 0.45rem; font-weight:700; border-color:${currentUnit === 'Belum Didisposisi' ? '#EF4444' : '#0F294A'}; background:${currentUnit === 'Belum Didisposisi' ? '#FEF2F2' : '#EFF6FF'}; color:#0F294A; border-radius:4px;">
-            <option value="Belum Didisposisi" ${currentUnit === 'Belum Didisposisi' ? 'selected' : ''}>⚠️ [Super Admin] Pilih Bidang Disposisi...</option>
+            <option value="Belum Didisposisi" ${currentUnit === 'Belum Didisposisi' ? 'selected' : ''}>⚠️ [Pilih 5 Bidang Disposisi...]</option>
             ${optionsHtml}
           </select>
-          ${currentUnit === 'Belum Didisposisi' ? '<span style="font-size:0.68rem; color:#DC2626; font-weight:700; display:block; margin-top:2px;">Wajib didisposisi oleh Super Admin</span>' : '<span style="font-size:0.68rem; color:#059669; font-weight:700; display:block; margin-top:2px;">✓ Disposisi Terkirim ke Bidang</span>'}
+          ${currentUnit === 'Belum Didisposisi' ? '<span style="font-size:0.68rem; color:#DC2626; font-weight:700; display:block; margin-top:2px;">Wajib didisposisi Super Admin</span>' : '<span style="font-size:0.68rem; color:#059669; font-weight:700; display:block; margin-top:2px;">✓ Disposisi Terkirim</span>'}
         </div>
       `;
     } else {
@@ -2420,14 +2458,26 @@ let uploadedFileSuratBase64 = null;
 let uploadedFileSuratName = '';
 
 window.toggleMetodeBalasan = function (val) {
+  const rowMeta = document.getElementById('rowMetaSuratResmi');
   const areaKetik = document.getElementById('areaKetikNaskah');
   const areaUpload = document.getElementById('areaUploadDokumen');
   const txtIsi = document.getElementById('sakresIsiSurat');
+  const inputNoSurat = document.getElementById('sakresNomorSurat');
+  const inputPejabat = document.getElementById('sakresPejabat');
+
   if (val === 'upload') {
+    // Jika upload file surat: tampilkan input nomor surat & pejabat resmi
+    if (rowMeta) rowMeta.style.display = 'grid';
+    if (inputNoSurat) inputNoSurat.required = true;
+    if (inputPejabat) inputPejabat.required = true;
     if (areaKetik) areaKetik.style.display = 'none';
     if (areaUpload) areaUpload.style.display = 'block';
     if (txtIsi) txtIsi.required = false;
   } else {
+    // Jika ketik naskah resmi: sembunyikan nomor surat & pejabat (tidak perlu diisi)
+    if (rowMeta) rowMeta.style.display = 'none';
+    if (inputNoSurat) inputNoSurat.required = false;
+    if (inputPejabat) inputPejabat.required = false;
     if (areaKetik) areaKetik.style.display = 'block';
     if (areaUpload) areaUpload.style.display = 'none';
     if (txtIsi) txtIsi.required = true;
@@ -2506,18 +2556,30 @@ window.closeModalSakres = function () {
 window.handleSimpanSuratBalasan = function (e) {
   e.preventDefault();
   const ticket = document.getElementById('sakresTargetTicket').value;
-  const nomorSurat = document.getElementById('sakresNomorSurat').value.trim();
-  const pejabat = document.getElementById('sakresPejabat').value.trim();
-  const perihal = document.getElementById('sakresPerihalSurat').value.trim();
   const metode = document.querySelector('input[name="metodeBalasan"]:checked') ? document.querySelector('input[name="metodeBalasan"]:checked').value : 'ketik';
+
+  const perihal = document.getElementById('sakresPerihalSurat').value.trim();
   const isi = document.getElementById('sakresIsiSurat').value.trim();
+
+  // Untuk naskah resmi, nomor surat dan pejabat tidak perlu diisi (dibuat ringkas)
+  let nomorSurat = document.getElementById('sakresNomorSurat').value.trim();
+  let pejabat = document.getElementById('sakresPejabat').value.trim();
+
+  if (metode === 'ketik') {
+    if (!nomorSurat) nomorSurat = '-';
+    if (!pejabat) pejabat = currentUser ? `${currentUser.nama} (${currentUser.unit || 'PU'})` : 'PU Pekerjaan Umum';
+  }
 
   if (metode === 'upload' && !uploadedFileSuratBase64) {
     showToast('Validasi', 'Silakan pilih berkas file surat balasan yang hendak diunggah.', 'error');
     return;
   }
+  if (metode === 'upload' && (!nomorSurat || nomorSurat === '-')) {
+    showToast('Validasi', 'Harap isi Nomor Surat Dinas Resmi untuk dokumen yang diunggah.', 'error');
+    return;
+  }
   if (metode === 'ketik' && !isi) {
-    showToast('Validasi', 'Silakan tulis isi dokumen surat balasan.', 'error');
+    showToast('Validasi', 'Silakan tulis isi dokumen tanggapan / naskah balasan.', 'error');
     return;
   }
 
@@ -2591,7 +2653,7 @@ window.lihatSuratBalasan = function (ticket) {
       <!-- Nomor Surat & Tanggal -->
       <div style="display:flex; justify-content:space-between; font-size:0.85rem; margin-bottom:1rem; font-family:sans-serif;">
         <div>
-          <div>Nomor &nbsp; &nbsp;: <strong>${escapeHtml(letter.letterNo)}</strong></div>
+          ${letter.letterNo && letter.letterNo !== '-' ? `<div>Nomor &nbsp; &nbsp;: <strong>${escapeHtml(letter.letterNo)}</strong></div>` : ''}
           <div>Sifat &nbsp; &nbsp; &nbsp;: Penting / Resmi</div>
           <div>Lampiran : ${isUploaded ? '1 (Satu) Berkas Dokumen Terlampir' : '1 (Satu) Berkas Lembar Pengaduan'}</div>
           <div>Perihal &nbsp; : <strong>${escapeHtml(letter.subject)}</strong></div>
@@ -2712,8 +2774,32 @@ window.bukaModalDataSuratMasukAdmin = function (ticket) {
             <td style="padding:0.65rem 1rem; font-weight:700; color:#1E293B;">${escapeHtml(data.perihal)}</td>
           </tr>
           <tr style="border-bottom:1px solid #E2E8F0;">
-            <th style="padding:0.65rem 1rem; color:#475569;">MASUK VIA</th>
-            <td style="padding:0.65rem 1rem; font-weight:700; color:#0284C7;">${escapeHtml(data.masukVia)}</td>
+            <th style="padding:0.65rem 1rem; color:#475569;">METODE PENGIRIMAN</th>
+            <td style="padding:0.65rem 1rem; font-weight:700; color:#0284C7;">${escapeHtml(data.masukVia || 'Online')}</td>
+          </tr>
+          <tr style="border-bottom:1px solid #E2E8F0; background:#F8FAFC;">
+            <th style="padding:0.65rem 1rem; color:#475569;">BERKAS LAMPIRAN SURAT</th>
+            <td style="padding:0.65rem 1rem;">
+              ${data.fileAttachment ? `
+                <div style="display:flex; flex-direction:column; gap:0.5rem; align-items:flex-start;">
+                  <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+                    <a href="${data.fileAttachment}" target="_blank" 
+                      style="display:inline-flex; align-items:center; gap:0.35rem; background:#0284C7; color:#fff; text-decoration:none; padding:0.4rem 0.85rem; border-radius:5px; font-size:0.78rem; font-weight:700; box-shadow:0 2px 4px rgba(2,132,199,0.3);">
+                      👁️ Pratinjau / Buka Berkas
+                    </a>
+                    <a href="${data.fileAttachment}" download="${escapeHtml(data.fileName || 'Berkas_Surat_Masuk.pdf')}" 
+                      style="display:inline-flex; align-items:center; gap:0.35rem; background:#16A34A; color:#fff; text-decoration:none; padding:0.4rem 0.85rem; border-radius:5px; font-size:0.78rem; font-weight:700; box-shadow:0 2px 4px rgba(22,163,74,0.3);">
+                      ⬇️ Unduh Berkas (${escapeHtml(data.fileName || 'Lampiran Surat')})
+                    </a>
+                  </div>
+                  ${data.fileAttachment.startsWith('data:image/') ? `
+                    <div style="margin-top:0.4rem; max-width:320px; border:1px solid #CBD5E1; border-radius:6px; overflow:hidden;">
+                      <img src="${data.fileAttachment}" alt="Pratinjau Surat" style="width:100%; display:block;">
+                    </div>
+                  ` : ''}
+                </div>
+              ` : '<span style="color:#64748B; font-weight:normal; font-size:0.8rem;">Tidak melampirkan berkas digital</span>'}
+            </td>
           </tr>
           <tr style="background:#F8FAFC;">
             <th style="padding:0.65rem 1rem; color:#475569;">KONTAK / EMAIL PENGIRIM</th>
