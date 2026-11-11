@@ -16,7 +16,7 @@
   <div class="app-wrapper">
 
     <!-- Header Resmi PU Pekerjaan Umum -->
-    <header class="pupr-topbar">
+    <header class="pu-topbar">
       <div style="display: flex; align-items: center; gap: 0.5rem;">
         <!-- Tombol Toggle Menu Navigator (Aktif saat login di pojok kiri atas) -->
         <button type="button" class="btn-sidebar-toggle" id="btnToggleSidebar" title="Buka/Tutup Menu Navigator"
@@ -29,11 +29,11 @@
           <span>Menu</span>
         </button>
 
-        <div class="pupr-brand">
-          <img src="logo-pu.webp" alt="Logo PU" class="pupr-logo-img">
-          <div class="pupr-brand-text">
-            <span class="pupr-brand-title">PU PEKERJAAN UMUM</span>
-            <span class="pupr-brand-sub">Sistem Manajemen Pengguna &amp; Autentikasi Pegawai (Super Admin
+        <div class="pu-brand">
+          <img src="logo-pu.webp" alt="Logo PU" class="pu-logo-img">
+          <div class="pu-brand-text">
+            <span class="pu-brand-title">PU PEKERJAAN UMUM</span>
+            <span class="pu-brand-sub">Sistem Manajemen Pengguna &amp; Autentikasi Pegawai (Super Admin
               &bull; Bidang &bull; Sakres)</span>
           </div>
         </div>
@@ -48,7 +48,7 @@
           </svg>
           <span id="topbarClockText">Memuat waktu...</span>
         </div>
-        <div class="topbar-server-pill" title="Status Koneksi Pusat Data dan Teknologi Informasi PUPR">
+        <div class="topbar-server-pill" title="Status Koneksi Pusat Data dan Teknologi Informasi PU">
           <span class="server-pulse-dot"></span>
           <span>PUSDATIN Online</span>
         </div>
@@ -144,7 +144,7 @@
         <div class="auth-container" style="margin-top:1rem;">
           <div class="auth-dual-wrapper">
 
-            <!-- Sisi Kiri: Identitas Resmi PUPR & Pintasan Uji Coba -->
+            <!-- Sisi Kiri: Identitas Resmi PU & Pintasan Uji Coba -->
             <div class="auth-left-sidebar">
               <div class="auth-instansi-header">
                 <div class="auth-instansi-logo" style="display:flex; align-items:center; gap:0.75rem;">
@@ -152,7 +152,7 @@
                     style="width:48px; height:48px; object-fit:contain; border-radius:6px;">
                   <div>
                     <div class="auth-instansi-title">PU PEKERJAAN UMUM</div>
-                    <div style="font-size:0.75rem; color:var(--pupr-yellow); font-weight:700;">Republik Indonesia</div>
+                    <div style="font-size:0.75rem; color:var(--pu-yellow); font-weight:700;">Republik Indonesia</div>
                   </div>
                 </div>
                 <div class="auth-instansi-sub">
@@ -221,8 +221,8 @@
                   <div class="form-field">
                     <label class="field-label" for="loginId">ID User / NIP Pegawai</label>
                     <div class="input-box">
-                      <input type="text" id="loginId" class="form-control"
-                        placeholder="Contoh: PUPR-SUP01 / PUPR-ADM-BM" required autocomplete="username">
+                      <input type="text" id="loginId" class="form-control" placeholder="Contoh: PU-SUP01 / PU-ADM-BM"
+                        required autocomplete="username">
                     </div>
                   </div>
 
@@ -252,6 +252,22 @@
                     </a>
                   </div>
 
+                  <!-- VERIFIKASI KEAMANAN ADMIN (ANTI-BOT / CAPTCHA KODE ACAK) -->
+                  <div style="background:#F8FAFC; border:1px solid #CBD5E1; border-radius:8px; padding:0.85rem; margin-bottom:1.15rem;">
+                    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.4rem;">
+                      <span style="font-size:0.75rem; font-weight:800; color:#0F294A; display:flex; align-items:center; gap:0.3rem;">
+                        <span>🤖</span> Verifikasi Keamanan Pegawai
+                      </span>
+                      <span style="font-size:0.68rem; color:#64748B;">Anti-Bruteforce</span>
+                    </div>
+                    <div style="display:flex; align-items:center; gap:0.5rem;">
+                      <canvas id="adminCaptchaCanvas" width="135" height="38" style="background:#E2E8F0; border-radius:6px; cursor:pointer;" title="Klik untuk refresh kode" onclick="generateAdminCaptcha()"></canvas>
+                      <button type="button" onclick="generateAdminCaptcha()" title="Ganti Kode" style="background:#fff; border:1px solid #CBD5E1; border-radius:6px; padding:0.45rem 0.6rem; cursor:pointer; font-size:0.85rem;">🔄</button>
+                      <input type="text" id="adminCaptchaInput" maxlength="5" placeholder="5 KODE" class="form-control"
+                        style="text-transform:uppercase; font-weight:800; letter-spacing:2px; text-align:center; padding:0.45rem; font-size:0.92rem; flex:1;">
+                    </div>
+                  </div>
+
                   <button type="submit" class="btn-primary" id="btnSubmitLogin">
                     Masuk ke Portal PU &rarr;
                   </button>
@@ -273,7 +289,7 @@
                       <rect x="18" y="4" width="3" height="16" />
                     </svg>
                   </div>
-                  <h3 style="font-size: 1rem; color: var(--pupr-navy); margin-bottom: 0.25rem;">Mode Scan Barcode /
+                  <h3 style="font-size: 1rem; color: var(--pu-navy); margin-bottom: 0.25rem;">Mode Scan Barcode /
                     Kartu Pegawai</h3>
                   <p style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 0;">
                     Arahkan scanner barcode fisik ke barcode ID Card pegawai PU, atau ketik langsung kode kartu
@@ -316,7 +332,7 @@
                   <div class="form-field">
                     <label class="field-label" for="regId">ID User / NIP</label>
                     <div class="input-box">
-                      <input type="text" id="regId" class="form-control" placeholder="Contoh: PUPR-PIC-02" required>
+                      <input type="text" id="regId" class="form-control" placeholder="Contoh: PU-PIC-02" required>
                     </div>
                     <div class="field-hint">Format ID unik disarankan otomatis</div>
                   </div>
@@ -560,7 +576,7 @@
                     <div class="welcome-title">Selamat Datang, <span id="heroUserName">Drs. Bambang Sudiro, M.Si.</span>
                     </div>
                     <div class="welcome-meta">
-                      <span>ID Pengguna: <strong id="heroUserId">PUPR-SUP01</strong></span>
+                      <span>ID Pengguna: <strong id="heroUserId">PU-SUP01</strong></span>
                       <span>&bull;</span>
                       <span class="badge-unit" id="heroUserUnit">Sekretariat Jenderal</span>
                       <span>&bull;</span>
@@ -621,7 +637,7 @@
                   </button>
                 </div>
                 <div class="table-wrapper">
-                  <table class="pupr-table">
+                  <table class="pu-table">
                     <thead>
                       <tr>
                         <th>Unit Kerja / Direktorat</th>
@@ -668,7 +684,7 @@
 
                 <!-- Tabel Data -->
                 <div class="table-wrapper">
-                  <table class="pupr-table">
+                  <table class="pu-table">
                     <thead>
                       <tr>
                         <th>ID User</th>
@@ -681,109 +697,109 @@
                     </thead>
                     <tbody id="usersTableBody">
                       <tr>
-                        <td><span class="id-badge">PUPR-SUP01</span></td>
+                        <td><span class="id-badge">PU-SUP01</span></td>
                         <td>
                           <div class="pegawai-nama">Drs. Bambang Sudiro, M.Si.</div>
                           <div style="font-size: 0.75rem; color: #64748B;">Terdaftar: 2026-10-01 08:00</div>
                         </td>
                         <td><span class="pegawai-unit">Sekretariat Jenderal</span></td>
                         <td><span class="badge-role badge-role-super">Super Admin</span></td>
-                        <td><span class="table-pw-toggle" onclick="toggleTablePw(this, 'pupr123')">••••••••</span></td>
+                        <td><span class="table-pw-toggle" onclick="toggleTablePw(this, 'pu123')">••••••••</span></td>
                         <td>
                           <div class="table-opsi"><button type="button" class="btn-opsi"
-                              onclick="openEditModal('PUPR-SUP01')">Ubah</button><span
+                              onclick="openEditModal('PU-SUP01')">Ubah</button><span
                               style="font-size: 0.75rem; color: #0F294A; font-weight: 600; padding: 0.35rem 0.5rem;">Akun
                               Anda</span></div>
                         </td>
                       </tr>
                       <tr>
-                        <td><span class="id-badge">PUPR-ADM-BM</span></td>
+                        <td><span class="id-badge">PU-ADM-BM</span></td>
                         <td>
                           <div class="pegawai-nama">Ir. Hendra Gunawan, S.T., M.T.</div>
                           <div style="font-size: 0.75rem; color: #64748B;">Terdaftar: 2026-10-15 08:30</div>
                         </td>
                         <td><span class="pegawai-unit">Ditjen Bina Marga</span></td>
                         <td><span class="badge-role badge-role-admin">Admin Unit</span></td>
-                        <td><span class="table-pw-toggle" onclick="toggleTablePw(this, 'pupr123')">••••••••</span></td>
+                        <td><span class="table-pw-toggle" onclick="toggleTablePw(this, 'pu123')">••••••••</span></td>
                         <td>
                           <div class="table-opsi"><button type="button" class="btn-opsi"
-                              onclick="openEditModal('PUPR-ADM-BM')">Ubah</button><button type="button"
-                              class="btn-opsi btn-hapus" onclick="handleDelete('PUPR-ADM-BM')">Hapus</button></div>
+                              onclick="openEditModal('PU-ADM-BM')">Ubah</button><button type="button"
+                              class="btn-opsi btn-hapus" onclick="handleDelete('PU-ADM-BM')">Hapus</button></div>
                         </td>
                       </tr>
                       <tr>
-                        <td><span class="id-badge">PUPR-PIC-BM</span></td>
+                        <td><span class="id-badge">PU-PIC-BM</span></td>
                         <td>
                           <div class="pegawai-nama">Rian Kurniawan, S.T.</div>
                           <div style="font-size: 0.75rem; color: #64748B;">Terdaftar: 2026-10-16 09:00</div>
                         </td>
                         <td><span class="pegawai-unit">Ditjen Bina Marga</span></td>
                         <td><span class="badge-role badge-role-pic">PIC / Staf</span></td>
-                        <td><span class="table-pw-toggle" onclick="toggleTablePw(this, 'pupr123')">••••••••</span></td>
+                        <td><span class="table-pw-toggle" onclick="toggleTablePw(this, 'pu123')">••••••••</span></td>
                         <td>
                           <div class="table-opsi"><button type="button" class="btn-opsi"
-                              onclick="openEditModal('PUPR-PIC-BM')">Ubah</button><button type="button"
-                              class="btn-opsi btn-hapus" onclick="handleDelete('PUPR-PIC-BM')">Hapus</button></div>
+                              onclick="openEditModal('PU-PIC-BM')">Ubah</button><button type="button"
+                              class="btn-opsi btn-hapus" onclick="handleDelete('PU-PIC-BM')">Hapus</button></div>
                         </td>
                       </tr>
                       <tr>
-                        <td><span class="id-badge">PUPR-ADM-SDA</span></td>
+                        <td><span class="id-badge">PU-ADM-SDA</span></td>
                         <td>
                           <div class="pegawai-nama">Dewi Lestari, S.T.</div>
                           <div style="font-size: 0.75rem; color: #64748B;">Terdaftar: 2026-10-18 09:15</div>
                         </td>
                         <td><span class="pegawai-unit">Ditjen Sumber Daya Air</span></td>
                         <td><span class="badge-role badge-role-admin">Admin Unit</span></td>
-                        <td><span class="table-pw-toggle" onclick="toggleTablePw(this, 'pupr123')">••••••••</span></td>
+                        <td><span class="table-pw-toggle" onclick="toggleTablePw(this, 'pu123')">••••••••</span></td>
                         <td>
                           <div class="table-opsi"><button type="button" class="btn-opsi"
-                              onclick="openEditModal('PUPR-ADM-SDA')">Ubah</button><button type="button"
-                              class="btn-opsi btn-hapus" onclick="handleDelete('PUPR-ADM-SDA')">Hapus</button></div>
+                              onclick="openEditModal('PU-ADM-SDA')">Ubah</button><button type="button"
+                              class="btn-opsi btn-hapus" onclick="handleDelete('PU-ADM-SDA')">Hapus</button></div>
                         </td>
                       </tr>
                       <tr>
-                        <td><span class="id-badge">PUPR-PIC-SDA</span></td>
+                        <td><span class="id-badge">PU-PIC-SDA</span></td>
                         <td>
                           <div class="pegawai-nama">Fajar Nugroho, S.T.</div>
                           <div style="font-size: 0.75rem; color: #64748B;">Terdaftar: 2026-10-19 10:30</div>
                         </td>
                         <td><span class="pegawai-unit">Ditjen Sumber Daya Air</span></td>
                         <td><span class="badge-role badge-role-pic">PIC / Staf</span></td>
-                        <td><span class="table-pw-toggle" onclick="toggleTablePw(this, 'pupr123')">••••••••</span></td>
+                        <td><span class="table-pw-toggle" onclick="toggleTablePw(this, 'pu123')">••••••••</span></td>
                         <td>
                           <div class="table-opsi"><button type="button" class="btn-opsi"
-                              onclick="openEditModal('PUPR-PIC-SDA')">Ubah</button><button type="button"
-                              class="btn-opsi btn-hapus" onclick="handleDelete('PUPR-PIC-SDA')">Hapus</button></div>
+                              onclick="openEditModal('PU-PIC-SDA')">Ubah</button><button type="button"
+                              class="btn-opsi btn-hapus" onclick="handleDelete('PU-PIC-SDA')">Hapus</button></div>
                         </td>
                       </tr>
                       <tr>
-                        <td><span class="id-badge">PUPR-ADM-CK</span></td>
+                        <td><span class="id-badge">PU-ADM-CK</span></td>
                         <td>
                           <div class="pegawai-nama">Agus Setiawan, S.E.</div>
                           <div style="font-size: 0.75rem; color: #64748B;">Terdaftar: 2026-10-22 13:45</div>
                         </td>
                         <td><span class="pegawai-unit">Ditjen Cipta Karya</span></td>
                         <td><span class="badge-role badge-role-admin">Admin Unit</span></td>
-                        <td><span class="table-pw-toggle" onclick="toggleTablePw(this, 'pupr123')">••••••••</span></td>
+                        <td><span class="table-pw-toggle" onclick="toggleTablePw(this, 'pu123')">••••••••</span></td>
                         <td>
                           <div class="table-opsi"><button type="button" class="btn-opsi"
-                              onclick="openEditModal('PUPR-ADM-CK')">Ubah</button><button type="button"
-                              class="btn-opsi btn-hapus" onclick="handleDelete('PUPR-ADM-CK')">Hapus</button></div>
+                              onclick="openEditModal('PU-ADM-CK')">Ubah</button><button type="button"
+                              class="btn-opsi btn-hapus" onclick="handleDelete('PU-ADM-CK')">Hapus</button></div>
                         </td>
                       </tr>
                       <tr>
-                        <td><span class="id-badge">PUPR-PIC-CK</span></td>
+                        <td><span class="id-badge">PU-PIC-CK</span></td>
                         <td>
                           <div class="pegawai-nama">Siti Nurhaliza, A.Md.</div>
                           <div style="font-size: 0.75rem; color: #64748B;">Terdaftar: 2026-10-23 11:20</div>
                         </td>
                         <td><span class="pegawai-unit">Ditjen Cipta Karya</span></td>
                         <td><span class="badge-role badge-role-pic">PIC / Staf</span></td>
-                        <td><span class="table-pw-toggle" onclick="toggleTablePw(this, 'pupr123')">••••••••</span></td>
+                        <td><span class="table-pw-toggle" onclick="toggleTablePw(this, 'pu123')">••••••••</span></td>
                         <td>
                           <div class="table-opsi"><button type="button" class="btn-opsi"
-                              onclick="openEditModal('PUPR-PIC-CK')">Ubah</button><button type="button"
-                              class="btn-opsi btn-hapus" onclick="handleDelete('PUPR-PIC-CK')">Hapus</button></div>
+                              onclick="openEditModal('PU-PIC-CK')">Ubah</button><button type="button"
+                              class="btn-opsi btn-hapus" onclick="handleDelete('PU-PIC-CK')">Hapus</button></div>
                         </td>
                       </tr>
                     </tbody>
@@ -794,7 +810,7 @@
 
             </div>
 
-            <!-- HALAMAN 3: UNIT KERJA PUPR (11 DITJEN / BALAI) -->
+            <!-- HALAMAN 3: UNIT KERJA PU (11 DITJEN / BALAI) -->
             <div class="tab-page-content" id="pageUnits">
               <div class="panel-table-header"
                 style="background:#FFF; border-radius: var(--radius-md); border:1px solid var(--border-color); padding: 1.25rem 1.5rem;">
@@ -920,9 +936,9 @@
                 <!-- Area Pratinjau Laporan Kedinasan -->
                 <div class="table-wrapper" id="reportPrintArea">
                   <div class="report-official-header" id="reportHeaderDinas"
-                    style="display:none; padding:1.5rem 1rem 0.5rem; border-bottom:2px solid var(--pupr-navy); text-align:center; margin-bottom:1rem;">
+                    style="display:none; padding:1.5rem 1rem 0.5rem; border-bottom:2px solid var(--pu-navy); text-align:center; margin-bottom:1rem;">
                     <div
-                      style="font-size:0.85rem; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; color:var(--pupr-navy);">
+                      style="font-size:0.85rem; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; color:var(--pu-navy);">
                       PU (Pekerjaan Umum) Republik Indonesia</div>
                     <div style="font-size:1.1rem; font-weight:800; margin:0.3rem 0; color:#0F172A;">REKAPITULASI DATA
                       PENGGUNA PORTAL KEPEGAWAIAN</div>
@@ -930,7 +946,7 @@
                       tanggal: -</div>
                   </div>
 
-                  <table class="pupr-table">
+                  <table class="pu-table">
                     <thead>
                       <tr>
                         <th style="width:50px;">No</th>
@@ -975,7 +991,7 @@
 
                 <!-- Tabel Audit Log -->
                 <div class="table-wrapper">
-                  <table class="pupr-table">
+                  <table class="pu-table">
                     <thead>
                       <tr>
                         <th style="width:140px;">Waktu (WIB)</th>
@@ -1003,7 +1019,7 @@
                   <div class="panel-title">
                     <h2>Kotak Masuk Permohonan &amp; Laporan Publik</h2>
                     <p>Pesan, aduan masyarakat, dan permohonan layanan mitra badan usaha yang masuk secara langsung ke
-                      sistem kedinasan PUPR</p>
+                      sistem kedinasan PU</p>
                   </div>
 
                   <div class="panel-actions" style="display:flex; gap:0.5rem; align-items:center; flex-wrap:wrap;">
@@ -1044,7 +1060,7 @@
                 </div>
 
                 <div class="table-wrapper">
-                  <table class="pupr-table">
+                  <table class="pu-table">
                     <thead>
                       <tr>
                         <th style="width:40px; text-align:center;">
@@ -1065,14 +1081,13 @@
                     </thead>
                     <tbody id="inboxTableBody">
                       <tr>
-                        <td style="text-align:center;"><input type="checkbox" class="inbox-checkbox"
-                            value="PUPR-PUB-1001"
+                        <td style="text-align:center;"><input type="checkbox" class="inbox-checkbox" value="PU-PUB-1001"
                             style="cursor:pointer; width:16px; height:16px; accent-color:#059669;"></td>
-                        <td><strong style="color:var(--pupr-navy);">PUPR-PUB-1001</strong></td>
+                        <td><strong style="color:var(--pu-navy);">PU-PUB-1001</strong></td>
                         <td><span style="font-size:0.8rem; color:var(--text-muted);">2026-11-03 08:15</span></td>
                         <td>
                           <div style="font-weight:700; color:var(--text-primary);">Bambang Irawan, S.T.</div>
-                          <div style="font-size:0.75rem; color:var(--text-muted);">Dinas PUPR Kab. Cirebon &bull; Telp:
+                          <div style="font-size:0.75rem; color:var(--text-muted);">Dinas PU Kab. Cirebon &bull; Telp:
                             <strong>081298765432</strong>
                           </div>
                           <div style="font-size:0.7rem; color:#0369A1;">bambang.i@gmail.com</div>
@@ -1082,7 +1097,7 @@
                           <div style="font-size:0.72rem; color:var(--text-muted);">Pemerintah Pusat/Daerah</div>
                         </td>
                         <td style="max-width:220px;">
-                          <div style="font-weight:700; font-size:0.83rem; color:var(--pupr-navy);">Perbaikan Kerusakan
+                          <div style="font-weight:700; font-size:0.83rem; color:var(--pu-navy);">Perbaikan Kerusakan
                             Jalan Berlubang Lintas Pantura KM 48</div>
                           <div style="font-size:0.75rem; color:var(--text-secondary); margin-top:0.2rem;">Lubang sedalam
                             15cm membahayakan pengguna jalan sepeda motor dan armada logistik.</div>
@@ -1093,11 +1108,10 @@
                             Ditindaklanjuti</span></td>
                         <td style="text-align:center;">
                           <div style="display:flex; flex-direction:column; gap:0.35rem; align-items:center;">
-                            <button type="button" onclick="toggleAccSingle('PUPR-PUB-1001')" class="btn-sm"
+                            <button type="button" onclick="toggleAccSingle('PU-PUB-1001')" class="btn-sm"
                               style="padding:0.3rem 0.65rem; font-size:0.75rem; font-weight:700; border-radius:4px; cursor:pointer; width:100%; background:#059669; color:#fff; border:none;">✓
                               ACC Laporan</button>
-                            <select onchange="updatePublicReportStatus('PUPR-PUB-1001', this.value)"
-                              class="form-control"
+                            <select onchange="updatePublicReportStatus('PU-PUB-1001', this.value)" class="form-control"
                               style="font-size:0.72rem; padding:0.25rem 0.4rem; border-color:#CBD5E1;">
                               <option value="Menunggu Verifikasi Dinas">Menunggu</option>
                               <option value="Sedang Ditindaklanjuti" selected>Tindaklanjuti</option>
@@ -1107,10 +1121,9 @@
                         </td>
                       </tr>
                       <tr>
-                        <td style="text-align:center;"><input type="checkbox" class="inbox-checkbox"
-                            value="PUPR-PUB-1002"
+                        <td style="text-align:center;"><input type="checkbox" class="inbox-checkbox" value="PU-PUB-1002"
                             style="cursor:pointer; width:16px; height:16px; accent-color:#059669;"></td>
-                        <td><strong style="color:var(--pupr-navy);">PUPR-PUB-1002</strong></td>
+                        <td><strong style="color:var(--pu-navy);">PU-PUB-1002</strong></td>
                         <td><span style="font-size:0.8rem; color:var(--text-muted);">2026-11-03 09:10</span></td>
                         <td>
                           <div style="font-weight:700; color:var(--text-primary);">Ir. Hendro Wijaya</div>
@@ -1125,7 +1138,7 @@
                           <div style="font-size:0.72rem; color:var(--text-muted);">Swasta / BUMN</div>
                         </td>
                         <td style="max-width:220px;">
-                          <div style="font-weight:700; font-size:0.83rem; color:var(--pupr-navy);">Permohonan
+                          <div style="font-weight:700; font-size:0.83rem; color:var(--pu-navy);">Permohonan
                             Rekomendasi Teknis Pemanfaatan Sempadan Saluran Irigasi</div>
                           <div style="font-size:0.75rem; color:var(--text-secondary); margin-top:0.2rem;">Pembangunan
                             jembatan penyeberangan akses industri melintasi saluran sekunder.</div>
@@ -1135,11 +1148,10 @@
                         <td><span class="badge-role badge-role-pic">Menunggu Verifikasi</span></td>
                         <td style="text-align:center;">
                           <div style="display:flex; flex-direction:column; gap:0.35rem; align-items:center;">
-                            <button type="button" onclick="toggleAccSingle('PUPR-PUB-1002')" class="btn-sm"
+                            <button type="button" onclick="toggleAccSingle('PU-PUB-1002')" class="btn-sm"
                               style="padding:0.3rem 0.65rem; font-size:0.75rem; font-weight:700; border-radius:4px; cursor:pointer; width:100%; background:#059669; color:#fff; border:none;">✓
                               ACC Laporan</button>
-                            <select onchange="updatePublicReportStatus('PUPR-PUB-1002', this.value)"
-                              class="form-control"
+                            <select onchange="updatePublicReportStatus('PU-PUB-1002', this.value)" class="form-control"
                               style="font-size:0.72rem; padding:0.25rem 0.4rem; border-color:#CBD5E1;">
                               <option value="Menunggu Verifikasi Dinas" selected>Menunggu</option>
                               <option value="Sedang Ditindaklanjuti">Tindaklanjuti</option>
@@ -1149,10 +1161,9 @@
                         </td>
                       </tr>
                       <tr style="background:#F0FDF4;">
-                        <td style="text-align:center;"><input type="checkbox" class="inbox-checkbox"
-                            value="PUPR-PUB-1003"
+                        <td style="text-align:center;"><input type="checkbox" class="inbox-checkbox" value="PU-PUB-1003"
                             style="cursor:pointer; width:16px; height:16px; accent-color:#059669;"></td>
-                        <td><strong style="color:var(--pupr-navy);">PUPR-PUB-1003</strong></td>
+                        <td><strong style="color:var(--pu-navy);">PU-PUB-1003</strong></td>
                         <td><span style="font-size:0.8rem; color:var(--text-muted);">2026-11-03 09:45</span></td>
                         <td>
                           <div style="font-weight:700; color:var(--text-primary);">Siti Rahmawati, M.Si.</div>
@@ -1167,7 +1178,7 @@
                           <div style="font-size:0.72rem; color:var(--text-muted);">Perguruan Tinggi</div>
                         </td>
                         <td style="max-width:220px;">
-                          <div style="font-weight:700; font-size:0.83rem; color:var(--pupr-navy);">Permohonan Data
+                          <div style="font-weight:700; font-size:0.83rem; color:var(--pu-navy);">Permohonan Data
                             Masterplan SPAM Regional</div>
                           <div style="font-size:0.75rem; color:var(--text-secondary); margin-top:0.2rem;">Data spasial
                             jaringan perpipaan air minum wilayah perkotaan guna studi tesis.</div>
@@ -1178,11 +1189,10 @@
                             Disetujui (ACC)</span></td>
                         <td style="text-align:center;">
                           <div style="display:flex; flex-direction:column; gap:0.35rem; align-items:center;">
-                            <button type="button" onclick="toggleAccSingle('PUPR-PUB-1003')" class="btn-sm"
+                            <button type="button" onclick="toggleAccSingle('PU-PUB-1003')" class="btn-sm"
                               style="padding:0.3rem 0.65rem; font-size:0.75rem; font-weight:700; border-radius:4px; cursor:pointer; width:100%; background:#DC2626; color:#fff; border:none;">✕
                               Batalkan ACC</button>
-                            <select onchange="updatePublicReportStatus('PUPR-PUB-1003', this.value)"
-                              class="form-control"
+                            <select onchange="updatePublicReportStatus('PU-PUB-1003', this.value)" class="form-control"
                               style="font-size:0.72rem; padding:0.25rem 0.4rem; border-color:#CBD5E1;">
                               <option value="Menunggu Verifikasi Dinas">Menunggu</option>
                               <option value="Sedang Ditindaklanjuti">Tindaklanjuti</option>
@@ -1192,10 +1202,9 @@
                         </td>
                       </tr>
                       <tr>
-                        <td style="text-align:center;"><input type="checkbox" class="inbox-checkbox"
-                            value="PUPR-PUB-1004"
+                        <td style="text-align:center;"><input type="checkbox" class="inbox-checkbox" value="PU-PUB-1004"
                             style="cursor:pointer; width:16px; height:16px; accent-color:#059669;"></td>
-                        <td><strong style="color:var(--pupr-navy);">PUPR-PUB-1004</strong></td>
+                        <td><strong style="color:var(--pu-navy);">PU-PUB-1004</strong></td>
                         <td><span style="font-size:0.8rem; color:var(--text-muted);">2026-11-03 10:05</span></td>
                         <td>
                           <div style="font-weight:700; color:var(--text-primary);">Ahmad Fauzi, S.Kom.</div>
@@ -1209,21 +1218,20 @@
                           <div style="font-size:0.72rem; color:var(--text-muted);">Swasta</div>
                         </td>
                         <td style="max-width:220px;">
-                          <div style="font-weight:700; font-size:0.83rem; color:var(--pupr-navy);">Konsultasi
+                          <div style="font-weight:700; font-size:0.83rem; color:var(--pu-navy);">Konsultasi
                             Sertifikasi &amp; Verifikasi Administrasi Kemitraan</div>
                           <div style="font-size:0.75rem; color:var(--text-secondary); margin-top:0.2rem;">Permohonan
                             audiensi dan klarifikasi kelengkapan berkas penyedia jasa konstruksi.</div>
                         </td>
-                        <td style="font-size:0.8rem;">Gedung Utama PUPR, Jakarta Selatan</td>
+                        <td style="font-size:0.8rem;">Gedung Utama PU, Jakarta Selatan</td>
                         <td><span class="badge-unit">Sekretariat Jenderal</span></td>
                         <td><span class="badge-role badge-role-pic">Menunggu Verifikasi</span></td>
                         <td style="text-align:center;">
                           <div style="display:flex; flex-direction:column; gap:0.35rem; align-items:center;">
-                            <button type="button" onclick="toggleAccSingle('PUPR-PUB-1004')" class="btn-sm"
+                            <button type="button" onclick="toggleAccSingle('PU-PUB-1004')" class="btn-sm"
                               style="padding:0.3rem 0.65rem; font-size:0.75rem; font-weight:700; border-radius:4px; cursor:pointer; width:100%; background:#059669; color:#fff; border:none;">✓
                               ACC Laporan</button>
-                            <select onchange="updatePublicReportStatus('PUPR-PUB-1004', this.value)"
-                              class="form-control"
+                            <select onchange="updatePublicReportStatus('PU-PUB-1004', this.value)" class="form-control"
                               style="font-size:0.72rem; padding:0.25rem 0.4rem; border-color:#CBD5E1;">
                               <option value="Menunggu Verifikasi Dinas" selected>Menunggu</option>
                               <option value="Sedang Ditindaklanjuti">Tindaklanjuti</option>
@@ -1258,7 +1266,7 @@
                 </div>
 
                 <div class="table-responsive">
-                  <table class="table-pupr">
+                  <table class="table-pu">
                     <thead>
                       <tr>
                         <th>WAKTU LAPOR</th>
@@ -1282,7 +1290,7 @@
             <div class="tab-page-content" id="pageRegulations">
               <div class="panel-table" style="padding:1.75rem;">
                 <div class="panel-title" style="margin-bottom:1.5rem;">
-                  <h2>Regulasi &amp; Standar Operasional Prosedur (SOP) PUPR</h2>
+                  <h2>Regulasi &amp; Standar Operasional Prosedur (SOP) PU</h2>
                   <p>Pedoman resmi tata kelola akun digital, landasan organisasi, dan kebijakan keamanan SPBE
                     PU Pekerjaan Umum</p>
                 </div>
@@ -1291,7 +1299,7 @@
                   <!-- Regulasi 1 -->
                   <div class="regulation-card">
                     <div class="regulation-badge">Dasar Hukum Utama</div>
-                    <div class="regulation-title">Permen PUPR No. 13/PRT/M/2020</div>
+                    <div class="regulation-title">Permen PU No. 13/PRT/M/2020</div>
                     <div class="regulation-desc">
                       Tentang Organisasi dan Tata Kerja PU (Pekerjaan Umum) yang mengatur
                       kewenangan 11 Unit Organisasi (Ditjen, Badan, dan Balai).
@@ -1354,8 +1362,8 @@
             <div class="tab-page-content" id="pageProfile">
               <div class="profile-container">
 
-                <!-- Kartu Identitas Resmi PUPR -->
-                <div class="id-card-pupr">
+                <!-- Kartu Identitas Resmi PU -->
+                <div class="id-card-pu">
                   <div class="id-card-header">
                     <div class="auth-logo-badge" aria-hidden="true" style="width:36px; height:36px; font-size:1rem;">PU
                     </div>
@@ -1368,11 +1376,12 @@
 
                   <div class="id-card-body">
                     <div style="display:flex; align-items:center; gap:1rem; margin-bottom:0.75rem;">
-                      <div id="cardProfileAvatarImg" style="width:64px; height:64px; border-radius:50%; background:#0F294A; border:2px solid #FABE2C; overflow:hidden; display:flex; align-items:center; justify-content:center; color:#fff; font-weight:800; font-size:1.4rem;">
+                      <div id="cardProfileAvatarImg"
+                        style="width:64px; height:64px; border-radius:50%; background:#0F294A; border:2px solid #FABE2C; overflow:hidden; display:flex; align-items:center; justify-content:center; color:#fff; font-weight:800; font-size:1.4rem;">
                         <!-- Inisial atau Foto Profil -->
                       </div>
                       <div>
-                        <div class="id-card-nip" id="cardProfileId">PUPR-001</div>
+                        <div class="id-card-nip" id="cardProfileId">PU-001</div>
                         <div class="id-card-name" id="cardProfileNama">Nama Pegawai</div>
                         <div style="font-size:0.85rem; color:#E2E8F0;" id="cardProfileUnit">Ditjen Bina Marga</div>
                       </div>
@@ -1397,17 +1406,23 @@
 
                   <form id="profileForm" novalidate>
                     <!-- Input Upload Foto Profil -->
-                    <div class="form-field" style="margin-bottom:1.25rem; background:#F8FAFC; border:1px dashed #CBD5E1; padding:1rem; border-radius:8px;">
-                      <label class="field-label" style="font-weight:700; color:#0F294A; display:flex; align-items:center; gap:0.4rem;">
+                    <div class="form-field"
+                      style="margin-bottom:1.25rem; background:#F8FAFC; border:1px dashed #CBD5E1; padding:1rem; border-radius:8px;">
+                      <label class="field-label"
+                        style="font-weight:700; color:#0F294A; display:flex; align-items:center; gap:0.4rem;">
                         <span>📷</span> Foto Profil Akun Pegawai / PIC
                       </label>
                       <div style="display:flex; align-items:center; gap:1rem; margin-top:0.5rem;">
-                        <div id="profilePhotoPreview" style="width:55px; height:55px; border-radius:50%; background:#E2E8F0; border:2px solid #0F294A; overflow:hidden; display:flex; align-items:center; justify-content:center; color:#0F294A; font-weight:800; font-size:1.1rem; flex-shrink:0;">
+                        <div id="profilePhotoPreview"
+                          style="width:55px; height:55px; border-radius:50%; background:#E2E8F0; border:2px solid #0F294A; overflow:hidden; display:flex; align-items:center; justify-content:center; color:#0F294A; font-weight:800; font-size:1.1rem; flex-shrink:0;">
                           <!-- Pratinjau Foto -->
                         </div>
                         <div style="flex:1;">
-                          <input type="file" id="profilePhotoInput" accept="image/*" class="form-control" onchange="handleProfilePhotoChange(this)" style="font-size:0.85rem; padding:0.35rem 0.5rem; background:#fff;">
-                          <div style="font-size:0.72rem; color:#64748B; margin-top:0.3rem;">Format: JPG, PNG, atau WEBP. Foto otomatis tampil di Header, ID Card, dan Sidebar.</div>
+                          <input type="file" id="profilePhotoInput" accept="image/*" class="form-control"
+                            onchange="handleProfilePhotoChange(this)"
+                            style="font-size:0.85rem; padding:0.35rem 0.5rem; background:#fff;">
+                          <div style="font-size:0.72rem; color:#64748B; margin-top:0.3rem;">Format: JPG, PNG, atau WEBP.
+                            Foto otomatis tampil di Header, ID Card, dan Sidebar.</div>
                         </div>
                       </div>
                     </div>
@@ -1555,7 +1570,7 @@
               <div class="form-field">
                 <label class="field-label" for="sakresNomorSurat">Nomor Surat Dinas Resmi <span
                     style="color:#DC2626;">*</span></label>
-                <input type="text" id="sakresNomorSurat" class="form-control" placeholder="Contoh: 800/PUPR-BM/XI/2026">
+                <input type="text" id="sakresNomorSurat" class="form-control" placeholder="Contoh: 800/PU-BM/XI/2026">
               </div>
               <div class="form-field">
                 <label class="field-label" for="sakresPejabat">Pejabat / Unit Pengirim Balasan <span
@@ -1621,7 +1636,7 @@
       aria-labelledby="titleLihatSurat">
       <div class="modal-box" style="max-width: 650px;">
         <div class="modal-header-bar" style="background:#0F294A; color:#fff;">
-          <h3 id="titleLihatSurat" style="color:#fff; font-size:1.05rem;">📄 Dokumen Surat Balasan Resmi PUPR</h3>
+          <h3 id="titleLihatSurat" style="color:#fff; font-size:1.05rem;">📄 Dokumen Surat Balasan Resmi PU</h3>
           <button type="button" class="btn-modal-close" onclick="closeModalLihatSurat()" aria-label="Tutup"
             style="color:#fff;">&times;</button>
         </div>
@@ -1663,9 +1678,8 @@
             <div class="form-field" style="margin-bottom:0.85rem;">
               <label class="field-label" for="lupaIdUser" style="font-weight:700;">ID User / NIP Anda <span
                   style="color:#DC2626;">*</span></label>
-              <input type="text" id="lupaIdUser" class="form-control"
-                placeholder="Contoh: PUPR-ADM-BM atau PUPR-SAKRES01" required
-                style="font-weight:700; font-family:monospace;">
+              <input type="text" id="lupaIdUser" class="form-control" placeholder="Contoh: PU-ADM-BM atau PU-SAKRES01"
+                required style="font-weight:700; font-family:monospace;">
             </div>
 
             <div class="form-field" style="margin-bottom:0.85rem;">
@@ -1727,9 +1741,9 @@
         <div class="modal-content-body" style="padding: 1.5rem;">
           <div
             style="display:flex; align-items:center; gap:0.75rem; background:#F8FAFC; border:1px solid var(--border-color); padding:1rem; border-radius:var(--radius-sm); margin-bottom:1.25rem;">
-            <div class="pupr-logo-box" style="width:40px; height:40px; font-size:1rem;">PU</div>
+            <div class="pu-logo-box" style="width:40px; height:40px; font-size:1rem;">PU</div>
             <div>
-              <div style="font-weight:700; color:var(--pupr-navy); font-size:0.9rem;">Pusat Data &amp; Teknologi
+              <div style="font-weight:700; color:var(--pu-navy); font-size:0.9rem;">Pusat Data &amp; Teknologi
                 Informasi (PUSDATIN)</div>
               <div style="font-size:0.75rem; color:var(--text-secondary);">Sekretariat Jenderal PU Pekerjaan Umum</div>
             </div>
@@ -1741,7 +1755,7 @@
               style="border:1px solid var(--border-color); padding:0.85rem; border-radius:var(--radius-sm); background:#FFFFFF;">
               <div style="font-size:0.75rem; color:var(--text-muted); font-weight:700; text-transform:uppercase;">Call
                 Center Resmi</div>
-              <div style="font-size:1.1rem; font-weight:800; color:var(--pupr-navy); margin-top:0.2rem;">📞 158</div>
+              <div style="font-size:1.1rem; font-weight:800; color:var(--pu-navy); margin-top:0.2rem;">📞 158</div>
               <div style="font-size:0.72rem; color:var(--text-secondary);">Senin - Jumat (08:00 - 16:00 WIB)</div>
             </div>
 
@@ -1758,7 +1772,7 @@
               style="border:1px solid var(--border-color); padding:0.85rem; border-radius:var(--radius-sm); background:#FFFFFF;">
               <div style="font-size:0.75rem; color:var(--text-muted); font-weight:700; text-transform:uppercase;">Surel
                 / Email Dinas</div>
-              <div style="font-size:0.85rem; font-weight:700; color:var(--pupr-navy); margin-top:0.2rem;">✉️
+              <div style="font-size:0.85rem; font-weight:700; color:var(--pu-navy); margin-top:0.2rem;">✉️
                 helpdesk@pu.go.id</div>
               <div style="font-size:0.72rem; color:var(--text-secondary);">Tiket penanganan 1x24 jam</div>
             </div>
@@ -1775,7 +1789,7 @@
 
           <!-- FAQ Singkat -->
           <div style="border-top:1px solid var(--border-color); padding-top:1rem;">
-            <div style="font-size:0.8rem; font-weight:700; color:var(--pupr-navy); margin-bottom:0.5rem;">Pertanyaan
+            <div style="font-size:0.8rem; font-weight:700; color:var(--pu-navy); margin-bottom:0.5rem;">Pertanyaan
               Umum (FAQ Kepegawaian):</div>
             <details
               style="font-size:0.8rem; margin-bottom:0.5rem; background:#F8FAFC; padding:0.5rem 0.75rem; border-radius:var(--radius-xs);">
@@ -1805,7 +1819,7 @@
     <div class="toast-area" id="toastContainer" aria-live="polite"></div>
 
     <!-- Footer Resmi -->
-    <footer class="pupr-footer">
+    <footer class="pu-footer">
       PU (Pekerjaan Umum) Republik Indonesia &copy; 2026. Hak Cipta Dilindungi.
     </footer>
 
