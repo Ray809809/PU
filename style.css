@@ -125,6 +125,51 @@ body {
   display: block;
 }
 
+/* Efek Kilauan Elegan pada Logo */
+.logo-shine-wrapper {
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
+  border-radius: 8px;
+  line-height: 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+  flex-shrink: 0;
+}
+.logo-shine-wrapper::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -60%;
+  width: 40%;
+  height: 200%;
+  background: linear-gradient(
+    to right,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.8) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  transform: rotate(25deg);
+  animation: logoShineEffect 3.5s infinite ease-in-out;
+  pointer-events: none;
+}
+@keyframes logoShineEffect {
+  0% {
+    left: -70%;
+    opacity: 0;
+  }
+  15% {
+    opacity: 1;
+  }
+  35% {
+    left: 140%;
+    opacity: 0;
+  }
+  100% {
+    left: 140%;
+    opacity: 0;
+  }
+}
+
 .pu-brand-text {
   display: flex;
   flex-direction: column;

@@ -17,8 +17,49 @@
       margin-bottom: 1.25rem;
       border-left: 6px solid #FABE2C;
       box-shadow: 0 4px 16px rgba(21, 62, 117, 0.16);
+    /* Efek Kilauan Mewah pada Logo PU */
+    .logo-shine-wrapper {
+      position: relative;
+      display: inline-block;
+      overflow: hidden;
+      border-radius: 8px;
+      line-height: 0;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
     }
-  </style>
+    .logo-shine-wrapper::after {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -60%;
+      width: 40%;
+      height: 200%;
+      background: linear-gradient(
+        to right,
+        rgba(255, 255, 255, 0) 0%,
+        rgba(255, 255, 255, 0.75) 50%,
+        rgba(255, 255, 255, 0) 100%
+      );
+      transform: rotate(25deg);
+      animation: logoShineEffect 3.5s infinite ease-in-out;
+      pointer-events: none;
+    }
+    @keyframes logoShineEffect {
+      0% {
+        left: -70%;
+        opacity: 0;
+      }
+      15% {
+        opacity: 1;
+      }
+      35% {
+        left: 140%;
+        opacity: 0;
+      }
+      100% {
+        left: 140%;
+        opacity: 0;
+      }
+    }
 </head>
 
 <body>
@@ -26,7 +67,9 @@
     <!-- Header Resmi Khusus Laporan Tamu -->
     <header class="pu-topbar" style="display:flex; justify-content:space-between; align-items:center;">
       <div style="display:flex; align-items:center; gap:0.75rem;">
-        <img src="logo-pu.webp" alt="Logo PU" class="pu-logo-img">
+        <div class="logo-shine-wrapper">
+          <img src="logo-pu.webp" alt="Logo PU" class="pu-logo-img" style="width:42px; height:42px; object-fit:contain; border-radius:8px; display:block;">
+        </div>
         <div class="pu-brand-text">
           <span class="pu-brand-title">PUSAT INFORMASI CIMANCIS PI</span>
           <span class="pu-brand-sub">Portal Pengaduan &amp; Laporan Tamu</span>
