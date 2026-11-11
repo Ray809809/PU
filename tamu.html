@@ -325,28 +325,23 @@
 
           </div>
 
-          <!-- KELOMPOK 3: OPSI SURAT LAPORAN RESMI ATAU LAPORAN LANGSUNG -->
+          <!-- KELOMPOK 3: OPSI SURAT LAPORAN RESMI (HANYA 1 CHECKBOX PRAKTIS) -->
           <div
             style="background:#ffffff; border:1px solid #E2E8F0; border-radius:12px; padding:1.25rem; margin-bottom:1.5rem; box-shadow:0 2px 6px rgba(0,0,0,0.03);">
-            <label class="field-label" style="font-size:0.95rem; line-height:1.5; color:#1E293B; font-weight:800;">
-              Apakah Anda Menyertakan Berkas / Surat Resmi dalam Laporan Ini? <span style="color:#DC2626;">*</span>
+            <label class="field-label" style="font-size:0.95rem; line-height:1.5; color:#1E293B; font-weight:800; display:block; margin-bottom:0.35rem;">
+              Apakah Anda Menyertakan Berkas / Surat Resmi dalam Laporan Ini?
             </label>
-            <p style="font-size:0.82rem; color:#64748B; margin:0.25rem 0 0.75rem 0;">
-              Pilih opsi di bawah. Jika ada surat, silakan lengkapi formulir rincian surat masuk yang otomatis terbuka.
+            <p style="font-size:0.82rem; color:#64748B; margin:0 0 0.85rem 0;">
+              Jika tidak ada surat, lewati saja pilihan ini. Jika membawa/melampirkan surat dinas, silakan centang kotak di bawah.
             </p>
+            
             <div
-              style="display:flex; flex-direction:column; gap:0.6rem; background:#F8FAFC; padding:0.85rem 1rem; border-radius:8px; border:1px solid #E2E8F0;">
+              style="background:#F8FAFC; padding:0.9rem 1.1rem; border-radius:8px; border:1.5px solid #E2E8F0; transition:all 0.2s ease;">
               <label
-                style="display:inline-flex; align-items:center; gap:0.6rem; font-size:0.95rem; cursor:pointer; color:#0F294A; font-weight:700;">
-                <input type="radio" name="tamuOpsiKirimSurat" value="AdaSurat"
-                  onchange="toggleFormSuratTambahan(this.value)" style="width:18px; height:18px; accent-color:#0F294A;">
-                <span>Ada Berkas / Surat Laporan (Lengkapi Formulir Lembar Surat Masuk)</span>
-              </label>
-              <label
-                style="display:inline-flex; align-items:center; gap:0.6rem; font-size:0.95rem; cursor:pointer; color:#334155; font-weight:600;">
-                <input type="radio" name="tamuOpsiKirimSurat" value="TanpaSurat"
-                  onchange="toggleFormSuratTambahan(this.value)" style="width:18px; height:18px; accent-color:#0F294A;">
-                <span>Tidak Menggunakan Surat (Langsung Kirim Laporan ke Admin)</span>
+                style="display:inline-flex; align-items:center; gap:0.75rem; font-size:0.95rem; cursor:pointer; color:#0F294A; font-weight:700; user-select:none;">
+                <input type="checkbox" id="chkAdaSuratLaporan"
+                  onchange="toggleCheckboxSurat(this.checked)" style="width:20px; height:20px; accent-color:#0F294A; cursor:pointer;">
+                <span>Ya, Ada Berkas / Surat Laporan (Buka Formulir Lembar Surat Masuk)</span>
               </label>
             </div>
 
@@ -816,15 +811,15 @@
       }
     };
 
-    window.toggleFormSuratTambahan = function (val) {
+    window.toggleCheckboxSurat = function (isChecked) {
       const section = document.getElementById('sectionFormInputSurat');
       const btnTeks = document.getElementById('btnSubmitTeks');
       const tglSuratEl = document.getElementById('inputTglSurat');
 
-      if (val === 'AdaSurat') {
+      if (isChecked) {
         if (section) section.style.display = 'block';
         if (btnTeks) btnTeks.innerHTML = '🚀 Kirim Berkas Surat &amp; Cetak Tanda Terima &rarr;';
-        // Otomatis isi tanggal surat dengan tanggal hari ini (YYYY-MM-DD)
+        // Otomatis isi tanggal surat dengan tanggal hari ini jika belum terisi
         if (tglSuratEl && !tglSuratEl.value) {
           const now = new Date();
           const pad = (n) => String(n).padStart(2, '0');
@@ -1282,13 +1277,8 @@
 
       const rincian = document.getElementById('tamuRincian').value.trim();
 
-      const opsiKirimEl = document.querySelector('input[name="tamuOpsiKirimSurat"]:checked');
-      if (!opsiKirimEl) {
-        showToast('Peringatan', 'Harap tentukan apakah Anda menyertakan berkas/surat resmi.', 'error');
-        return;
-      }
-      const tipePengajuan = opsiKirimEl.value;
-      const adaSurat = (tipePengajuan === 'AdaSurat');
+      const chkSuratEl = document.getElementById('chkAdaSuratLaporan');
+      const adaSurat = chkSuratEl ? chkSuratEl.checked : false;
 
       const ticket = 'PU-LAP-' + Math.floor(1000 + Math.random() * 9000);
       activeTicketSubmitted = ticket;
