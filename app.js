@@ -1,10 +1,10 @@
 /**
  * Sistem Informasi Manajemen Identitas & Pengguna
- * PU (Pekerjaan Umum) (PUPR)
+ * PU (Pekerjaan Umum) (PU)
  * Tahap 2: Manajemen Peran (Super Admin, Admin Unit, PIC)
  */
 
-// Tingkatan 3 Peran Resmi Admin & Pengguna PUPR:
+// Tingkatan 3 Peran Resmi Admin & Pengguna PU:
 // 1. Super Admin (Wewenang Penuh, Kelola Pegawai, Disposisi Surat Laporan, Hapus Log)
 // 2. Bidang (Ditjen / Unit Kerja Teknis yang Dituju, Menerima Disposisi & Memproses Laporan)
 // 3. Sakres (Sekretariat / Petugas Khusus yang Menerbitkan Surat Balasan Resmi + Barcode PDF)
@@ -51,7 +51,7 @@ function normalizeReport(r) {
   if (!r || typeof r !== 'object') return null;
   const unit = r.targetUnit || r.unit || 'Belum Didisposisi';
   return {
-    ticket: r.ticket || 'PUPR-PUB-' + Math.floor(1000 + Math.random() * 9000),
+    ticket: r.ticket || 'PU-PUB-' + Math.floor(1000 + Math.random() * 9000),
     date: r.date || formatCurrentDateTime(false),
     reporterName: r.reporterName || r.nama || r.name || 'Pemohon Tanpa Nama',
     contact: r.contact || r.phone || r.telepon || '-',
@@ -71,11 +71,11 @@ function normalizeReport(r) {
     replyLetter: r.replyLetter || null
     // Contoh struktur replyLetter:
     // {
-    //   letterNo: '800/PUPR-SRT/2026',
+    //   letterNo: '800/PU-SRT/2026',
     //   date: '2026-11-03 11:30',
     //   officialName: 'Hj. Ratna Sari, S.Kom., M.M.',
-    //   officialRole: 'Sekretariat / Petugas Sakres PUPR',
-    //   subject: 'Tindak Lanjut Laporan No. PUPR-LAP-1234',
+    //   officialRole: 'Sekretariat / Petugas Sakres PU',
+    //   subject: 'Tindak Lanjut Laporan No. PU-LAP-1234',
     //   content: 'Dengan hormat, sehubungan dengan laporan kerusakan infrastruktur yang Saudara ajukan...',
     //   pdfUrl: 'data:... / blob:...',
     //   barcodeUrl: 'https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=...'
@@ -84,7 +84,7 @@ function normalizeReport(r) {
 }
 
 // Daftar 5 Bidang Teknis Utama PU Pekerjaan Umum
-const DAFTAR_UNIT_PUPR = [
+const DAFTAR_UNIT_PU = [
   'Ditjen Bina Marga',
   'Ditjen Sumber Daya Air',
   'Ditjen Cipta Karya',
@@ -92,7 +92,7 @@ const DAFTAR_UNIT_PUPR = [
   'Ditjen Bina Konstruksi'
 ];
 
-// Data Awal Pegawai PUPR (3 Peran: Super Admin, Bidang, Sakres)
+// Data Awal Pegawai PU (3 Peran: Super Admin, Bidang, Sakres)
 const SEED_PEGAWAI_V2 = [
   {
     id: 'admin123',
@@ -103,7 +103,7 @@ const SEED_PEGAWAI_V2 = [
     createdAt: '2026-10-01 08:00'
   },
   {
-    id: 'PUPR-SUP01',
+    id: 'PU-SUP01',
     nama: 'Drs. Bambang Sudiro, M.Si. (Alternatif)',
     pw: 'admin123',
     unit: 'Sekretariat Jenderal',
@@ -111,7 +111,7 @@ const SEED_PEGAWAI_V2 = [
     createdAt: '2026-10-01 08:00'
   },
   {
-    id: 'PUPR-SAKRES01',
+    id: 'PU-SAKRES01',
     nama: 'Hj. Ratna Sari, S.Kom., M.M.',
     pw: 'admin123',
     unit: 'Sekretariat / Sakres',
@@ -119,7 +119,7 @@ const SEED_PEGAWAI_V2 = [
     createdAt: '2026-10-05 08:30'
   },
   {
-    id: 'PUPR-BDG-BM',
+    id: 'PU-BDG-BM',
     nama: 'Ir. Hendra Gunawan, S.T., M.T.',
     pw: 'admin123',
     unit: 'Ditjen Bina Marga',
@@ -127,7 +127,7 @@ const SEED_PEGAWAI_V2 = [
     createdAt: '2026-10-15 08:30'
   },
   {
-    id: 'PUPR-BDG-SDA',
+    id: 'PU-BDG-SDA',
     nama: 'Dewi Lestari, S.T.',
     pw: 'admin123',
     unit: 'Ditjen Sumber Daya Air',
@@ -135,7 +135,7 @@ const SEED_PEGAWAI_V2 = [
     createdAt: '2026-10-18 09:15'
   },
   {
-    id: 'PUPR-BDG-CK',
+    id: 'PU-BDG-CK',
     nama: 'Agus Setiawan, S.E., M.T.',
     pw: 'admin123',
     unit: 'Ditjen Cipta Karya',
@@ -143,7 +143,7 @@ const SEED_PEGAWAI_V2 = [
     createdAt: '2026-10-22 13:45'
   },
   {
-    id: 'PUPR-BDG-PR',
+    id: 'PU-BDG-PR',
     nama: 'Budi Santoso, S.T.',
     pw: 'admin123',
     unit: 'Ditjen Perumahan',
@@ -157,7 +157,7 @@ const SEED_AUDIT_LOGS = [
   {
     id: 'LOG-001',
     time: '2026-11-02 08:30:15',
-    actorId: 'PUPR-SUP01',
+    actorId: 'PU-SUP01',
     actorName: 'Drs. Bambang Sudiro, M.Si.',
     role: 'Super Admin',
     action: 'Autentikasi Masuk',
@@ -168,7 +168,7 @@ const SEED_AUDIT_LOGS = [
   {
     id: 'LOG-002',
     time: '2026-11-02 08:45:22',
-    actorId: 'PUPR-ADM-BM',
+    actorId: 'PU-ADM-BM',
     actorName: 'Ir. Hendra Gunawan',
     role: 'Admin Unit',
     action: 'Verifikasi Pegawai',
@@ -179,7 +179,7 @@ const SEED_AUDIT_LOGS = [
   {
     id: 'LOG-003',
     time: '2026-11-02 09:12:00',
-    actorId: 'PUPR-ADM-SDA',
+    actorId: 'PU-ADM-SDA',
     actorName: 'Dewi Lestari, S.T.',
     role: 'Admin Unit',
     action: 'Pembaruan Data',
@@ -190,18 +190,18 @@ const SEED_AUDIT_LOGS = [
   {
     id: 'LOG-004',
     time: '2026-11-02 09:50:41',
-    actorId: 'PUPR-SUP01',
+    actorId: 'PU-SUP01',
     actorName: 'Drs. Bambang Sudiro, M.Si.',
     role: 'Super Admin',
     action: 'Sinkronisasi Sistem',
-    details: 'Pemeriksaan integritas basis data 11 Unit Organisasi PUPR',
+    details: 'Pemeriksaan integritas basis data 11 Unit Organisasi PU',
     unit: 'Sekretariat Jenderal',
     status: 'Sukses'
   }
 ];
 
-// Endpoint Database Firebase Realtime PUPR
-const FIREBASE_DB_URL = 'https://pupr-portal-default-rtdb.firebaseio.com';
+// Endpoint Database Firebase Realtime PU
+const FIREBASE_DB_URL = 'https://pu-portal-default-rtdb.firebaseio.com';
 
 // Sinkronisasi Laporan Otomatis ke Cloud Firebase
 async function syncReportToCloud(report) {
@@ -240,7 +240,7 @@ function initCloudRealtimeListener() {
       const local = Storage.getPublicReports();
       // Bandingkan apakah ada data baru atau status yang berubah
       if (JSON.stringify(cloudReports) !== JSON.stringify(local)) {
-        localStorage.setItem('pupr_public_reports', JSON.stringify(cloudReports));
+        localStorage.setItem('pu_public_reports', JSON.stringify(cloudReports));
         if (typeof renderInboxPublicPage === 'function') renderInboxPublicPage();
         if (typeof updateInboxBadge === 'function') updateInboxBadge();
         if (typeof renderNotifList === 'function') renderNotifList();
@@ -258,15 +258,15 @@ if (typeof window !== 'undefined') {
 // Penyimpanan Lokal (LocalStorage) dengan Auto-Migration
 const Storage = {
   getUsers() {
-    const data = localStorage.getItem('pupr_users_v2');
+    const data = localStorage.getItem('pu_users_v2');
     if (!data) {
-      localStorage.setItem('pupr_users_v2', JSON.stringify(SEED_PEGAWAI_V2));
+      localStorage.setItem('pu_users_v2', JSON.stringify(SEED_PEGAWAI_V2));
       return SEED_PEGAWAI_V2;
     }
     try {
       let users = JSON.parse(data);
       if (!Array.isArray(users) || users.length === 0) {
-        localStorage.setItem('pupr_users_v2', JSON.stringify(SEED_PEGAWAI_V2));
+        localStorage.setItem('pu_users_v2', JSON.stringify(SEED_PEGAWAI_V2));
         return SEED_PEGAWAI_V2;
       }
       // Pastikan ada akun admin123 dan seluruh password disinkronkan ke admin123
@@ -291,14 +291,14 @@ const Storage = {
           else if (u.id.includes('ADM')) u.role = ROLES.ADMIN_UNIT;
           else u.role = ROLES.PIC;
         }
-        if (u.id === 'admin123' || u.id === 'PUPR-SUP01' || u.pw === 'pupr123' || u.pw === 'admin12') {
+        if (u.id === 'admin123' || u.id === 'PU-SUP01' || u.pw === 'pu123' || u.pw === 'admin12') {
           u.pw = 'admin123';
           needsResave = true;
         }
         return u;
       });
       if (needsResave) {
-        localStorage.setItem('pupr_users_v2', JSON.stringify(users));
+        localStorage.setItem('pu_users_v2', JSON.stringify(users));
       }
       return users;
     } catch (e) {
@@ -307,11 +307,11 @@ const Storage = {
   },
 
   saveUsers(users) {
-    localStorage.setItem('pupr_users_v2', JSON.stringify(users));
+    localStorage.setItem('pu_users_v2', JSON.stringify(users));
   },
 
   getSession() {
-    const session = localStorage.getItem('pupr_session_v2');
+    const session = localStorage.getItem('pu_session_v2');
     if (!session) return null;
     try {
       return JSON.parse(session);
@@ -321,17 +321,17 @@ const Storage = {
   },
 
   setSession(user) {
-    localStorage.setItem('pupr_session_v2', JSON.stringify(user));
+    localStorage.setItem('pu_session_v2', JSON.stringify(user));
   },
 
   clearSession() {
-    localStorage.removeItem('pupr_session_v2');
+    localStorage.removeItem('pu_session_v2');
   },
 
   getAuditLogs() {
-    const data = localStorage.getItem('pupr_audit_logs');
+    const data = localStorage.getItem('pu_audit_logs');
     if (!data) {
-      localStorage.setItem('pupr_audit_logs', JSON.stringify(SEED_AUDIT_LOGS));
+      localStorage.setItem('pu_audit_logs', JSON.stringify(SEED_AUDIT_LOGS));
       return SEED_AUDIT_LOGS;
     }
     try {
@@ -365,28 +365,28 @@ const Storage = {
     };
     logs.unshift(newLog);
     if (logs.length > 100) logs.length = 100;
-    localStorage.setItem('pupr_audit_logs', JSON.stringify(logs));
+    localStorage.setItem('pu_audit_logs', JSON.stringify(logs));
   },
 
   clearAuditLogs() {
-    localStorage.setItem('pupr_audit_logs', JSON.stringify([]));
+    localStorage.setItem('pu_audit_logs', JSON.stringify([]));
   },
 
   getPublicReports() {
-    const data = localStorage.getItem('pupr_public_reports');
+    const data = localStorage.getItem('pu_public_reports');
     if (!data) {
-      localStorage.setItem('pupr_public_reports', JSON.stringify([]));
+      localStorage.setItem('pu_public_reports', JSON.stringify([]));
       return [];
     }
     try {
       const parsed = JSON.parse(data);
       if (!Array.isArray(parsed)) {
-        localStorage.setItem('pupr_public_reports', JSON.stringify([]));
+        localStorage.setItem('pu_public_reports', JSON.stringify([]));
         return [];
       }
       return parsed.map(normalizeReport).filter(Boolean);
     } catch (e) {
-      localStorage.setItem('pupr_public_reports', JSON.stringify([]));
+      localStorage.setItem('pu_public_reports', JSON.stringify([]));
       return [];
     }
   },
@@ -396,13 +396,13 @@ const Storage = {
     if (!validReport) return;
     const list = this.getPublicReports();
     list.unshift(validReport);
-    localStorage.setItem('pupr_public_reports', JSON.stringify(list));
+    localStorage.setItem('pu_public_reports', JSON.stringify(list));
     // Kirim langsung ke Cloud Firebase agar HP lain / Laptop Admin langsung menerima
     syncReportToCloud(validReport);
   },
 
   getResetRequests() {
-    const data = localStorage.getItem('pupr_reset_requests');
+    const data = localStorage.getItem('pu_reset_requests');
     if (!data) return [];
     try {
       const parsed = JSON.parse(data);
@@ -415,20 +415,20 @@ const Storage = {
   addResetRequest(req) {
     const list = this.getResetRequests();
     list.unshift(req);
-    localStorage.setItem('pupr_reset_requests', JSON.stringify(list));
+    localStorage.setItem('pu_reset_requests', JSON.stringify(list));
   },
 
   saveResetRequests(list) {
-    localStorage.setItem('pupr_reset_requests', JSON.stringify(list));
+    localStorage.setItem('pu_reset_requests', JSON.stringify(list));
   },
 
   resetAll() {
-    localStorage.removeItem('pupr_users_v2');
-    localStorage.removeItem('pupr_session_v2');
-    localStorage.removeItem('pupr_audit_logs');
-    localStorage.removeItem('pupr_public_reports');
-    localStorage.setItem('pupr_users_v2', JSON.stringify(SEED_PEGAWAI_V2));
-    localStorage.setItem('pupr_audit_logs', JSON.stringify(SEED_AUDIT_LOGS));
+    localStorage.removeItem('pu_users_v2');
+    localStorage.removeItem('pu_session_v2');
+    localStorage.removeItem('pu_audit_logs');
+    localStorage.removeItem('pu_public_reports');
+    localStorage.setItem('pu_users_v2', JSON.stringify(SEED_PEGAWAI_V2));
+    localStorage.setItem('pu_audit_logs', JSON.stringify(SEED_AUDIT_LOGS));
   }
 };
 
@@ -592,7 +592,7 @@ const UNIT_DETAILS = {
   'Ditjen Pembiayaan Infrastruktur': 'Pengembangan investasi infrastruktur PU dan perumahan melalui skema KPBU.',
   'Sekretariat Jenderal': 'Koordinasi tugas, pembinaan administrasi, hukum, kepegawaian, organisasi, dan humas.',
   'Inspektorat Jenderal': 'Pengawasan intern, audit tata kelola pemerintahan yang bersih (WBK/WBBM), dan kepatuhan.',
-  'Badan Pengembangan SDM (BPSDM)': 'Pendidikan, pelatihan, dan pengembangan kompetensi aparatur sipil negara PUPR.',
+  'Badan Pengembangan SDM (BPSDM)': 'Pendidikan, pelatihan, dan pengembangan kompetensi aparatur sipil negara PU.',
   'Balai Besar Pelaksanaan Jalan Nasional (BBPJN)': 'Unit pelaksana teknis preservasi dan pembangunan jalan & jembatan di wilayah Indonesia.',
   'Balai Wilayah Sungai (BWS)': 'Unit pelaksana teknis konservasi dan pendayagunaan air di wilayah sungai/DAS.'
 };
@@ -732,7 +732,7 @@ function showToast(title, message, type = 'info') {
   }, 3500);
 }
 
-// Isi Dropdown Pilihan Unit PUPR
+// Isi Dropdown Pilihan Unit PU
 function populateUnitOptions() {
   const selects = [
     document.getElementById('regUnit'),
@@ -745,7 +745,7 @@ function populateUnitOptions() {
     const isFilter = select === elements.filterUnit;
     select.innerHTML = isFilter ? '<option value="">Semua Unit Kerja</option>' : '';
 
-    DAFTAR_UNIT_PUPR.forEach((unit) => {
+    DAFTAR_UNIT_PU.forEach((unit) => {
       const opt = document.createElement('option');
       opt.value = unit;
       opt.textContent = unit;
@@ -777,10 +777,10 @@ function populateRoleOptions(targetSelect, isSelfSuperAdmin = false) {
 // Rekomendasi ID Berikutnya
 function getNextId(role = ROLES.BIDANG) {
   const users = Storage.getUsers();
-  let prefix = 'PUPR-';
-  if (role === ROLES.SUPER_ADMIN) prefix = 'PUPR-SUP';
-  else if (role === ROLES.SAKRES) prefix = 'PUPR-SAKRES';
-  else prefix = 'PUPR-BDG-';
+  let prefix = 'PU-';
+  if (role === ROLES.SUPER_ADMIN) prefix = 'PU-SUP';
+  else if (role === ROLES.SAKRES) prefix = 'PU-SAKRES';
+  else prefix = 'PU-BDG-';
 
   const count = users.filter((u) => u.role === role).length + 1;
   return `${prefix}${String(count).padStart(2, '0')}`;
@@ -819,7 +819,7 @@ function switchAuthTab(mode) {
     if (elements.registerFormContainer) elements.registerFormContainer.style.display = 'block';
     if (elements.authMainTitle) {
       elements.authMainTitle.textContent = 'Pendaftaran Akun Baru';
-      elements.authMainSubtitle.textContent = 'Daftarkan data pegawai dan tentukan unit kerja resmi PUPR';
+      elements.authMainSubtitle.textContent = 'Daftarkan data pegawai dan tentukan unit kerja resmi PU';
     }
 
     // Populate role options di form registrasi
@@ -990,7 +990,7 @@ function renderReportsPage() {
   if (elements.reportFilterUnit && elements.reportFilterUnit.options.length <= 1) {
     if (currentUser.role === ROLES.SUPER_ADMIN) {
       elements.reportFilterUnit.innerHTML = '<option value="">Semua Unit Kerja (11 Unit)</option>' +
-        DAFTAR_UNIT_PUPR.map((u) => `<option value="${u}">${u}</option>`).join('');
+        DAFTAR_UNIT_PU.map((u) => `<option value="${u}">${u}</option>`).join('');
       elements.reportFilterUnit.disabled = false;
     } else {
       elements.reportFilterUnit.innerHTML = `<option value="${currentUser.unit}">${currentUser.unit}</option>`;
@@ -1026,7 +1026,7 @@ function renderReportsPage() {
       <tr>
         <td><span style="font-weight:700; color:var(--text-muted);">${idx + 1}</span></td>
         <td><span class="id-badge">${u.id}</span></td>
-        <td><span style="font-weight:700; color:var(--pupr-navy);">${u.nama}</span></td>
+        <td><span style="font-weight:700; color:var(--pu-navy);">${u.nama}</span></td>
         <td>${u.unit}</td>
         <td>${getRoleBadge(u.role)}</td>
         <td><span class="badge-role badge-role-pic" style="background:#DCFCE7; color:#166534;">Aktif Kedinasan</span></td>
@@ -1083,7 +1083,7 @@ window.exportReportCsv = function () {
   const now = new Date();
   const dateStr = now.toISOString().slice(0, 10);
   downloadLink.href = url;
-  downloadLink.download = `Laporan_Data_Pegawai_PUPR_${dateStr}.csv`;
+  downloadLink.download = `Laporan_Data_Pegawai_PU_${dateStr}.csv`;
   document.body.appendChild(downloadLink);
   downloadLink.click();
   document.body.removeChild(downloadLink);
@@ -1140,7 +1140,7 @@ function renderAuditPage() {
     <tr>
       <td style="font-size:0.75rem; color:var(--text-muted); font-family:monospace;">${log.time}</td>
       <td>
-        <div style="font-weight:700; color:var(--pupr-navy);">${log.actorName}</div>
+        <div style="font-weight:700; color:var(--pu-navy);">${log.actorName}</div>
         <div style="font-size:0.75rem; color:var(--text-secondary);">${log.actorId}</div>
       </td>
       <td>${getRoleBadge(log.role)}</td>
@@ -1280,7 +1280,7 @@ function renderRekapTable() {
   if (!elements.rekapTableBody) return;
   const allUsers = Storage.getUsers();
 
-  elements.rekapTableBody.innerHTML = DAFTAR_UNIT_PUPR.map((unit) => {
+  elements.rekapTableBody.innerHTML = DAFTAR_UNIT_PU.map((unit) => {
     const unitUsers = allUsers.filter((u) => u.unit === unit);
     const count = unitUsers.length;
     const isUserUnit = currentUser && currentUser.unit === unit;
@@ -1288,7 +1288,7 @@ function renderRekapTable() {
     return `
       <tr>
         <td>
-          <div style="font-weight:700; color:var(--pupr-navy);">${unit}</div>
+          <div style="font-weight:700; color:var(--pu-navy);">${unit}</div>
           <div style="font-size:0.75rem; color:#64748B;">${UNIT_DETAILS[unit] ? UNIT_DETAILS[unit].substring(0, 70) + '...' : ''}</div>
         </td>
         <td>
@@ -1322,7 +1322,7 @@ function renderUnitsGrid() {
   if (!elements.unitsCardContainer) return;
   const allUsers = Storage.getUsers();
 
-  elements.unitsCardContainer.innerHTML = DAFTAR_UNIT_PUPR.map((unit) => {
+  elements.unitsCardContainer.innerHTML = DAFTAR_UNIT_PU.map((unit) => {
     const unitUsers = allUsers.filter((u) => u.unit === unit);
     const adminCount = unitUsers.filter((u) => u.role === ROLES.ADMIN_UNIT).length;
     const picCount = unitUsers.filter((u) => u.role === ROLES.PIC).length;
@@ -1579,6 +1579,54 @@ window.toggleTablePw = function (spanEl, actualPw) {
   }
 };
 
+// ==========================================
+// CAPTCHA VERIFIKASI KEAMANAN LOGIN ADMIN
+// ==========================================
+let currentAdminCaptcha = '';
+
+window.generateAdminCaptcha = function () {
+  const canvas = document.getElementById('adminCaptchaCanvas');
+  if (!canvas) return;
+  const chars = '23456789ABCDEFGHJKLMNPQRSTUVWXYZ';
+  let code = '';
+  for (let i = 0; i < 5; i++) {
+    code += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  currentAdminCaptcha = code;
+
+  const ctx = canvas.getContext('2d');
+  ctx.fillStyle = '#F1F5F9';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  // Garis acak
+  for (let i = 0; i < 4; i++) {
+    ctx.strokeStyle = ['#CBD5E1', '#94A3B8', '#93C5FD'][Math.floor(Math.random() * 3)];
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.moveTo(Math.random() * canvas.width, Math.random() * canvas.height);
+    ctx.lineTo(Math.random() * canvas.width, Math.random() * canvas.height);
+    ctx.stroke();
+  }
+
+  // Tulis karakter
+  const colors = ['#0F294A', '#1E3A8A', '#0369A1', '#047857'];
+  for (let i = 0; i < code.length; i++) {
+    ctx.save();
+    const x = 14 + i * 23;
+    const y = 26 + (Math.random() * 4 - 2);
+    const angle = (Math.random() * 24 - 12) * Math.PI / 180;
+    ctx.translate(x, y);
+    ctx.rotate(angle);
+    ctx.font = 'bold 20px monospace, sans-serif';
+    ctx.fillStyle = colors[i % colors.length];
+    ctx.fillText(code[i], 0, 0);
+    ctx.restore();
+  }
+
+  const inputEl = document.getElementById('adminCaptchaInput');
+  if (inputEl) inputEl.value = '';
+};
+
 // Autentikasi: Login
 function handleLogin(e) {
   e.preventDefault();
@@ -1591,22 +1639,33 @@ function handleLogin(e) {
     return;
   }
 
+  // Validasi Captcha Admin
+  const captchaInput = (document.getElementById('adminCaptchaInput') ? document.getElementById('adminCaptchaInput').value : '').trim().toUpperCase();
+  if (currentAdminCaptcha && captchaInput !== currentAdminCaptcha) {
+    showLoginAlert('Verifikasi Gagal', 'Kode keamanan (captcha) salah atau belum diisi. Silakan masukkan 5 kode yang tertera.');
+    showToast('Verifikasi Keamanan', 'Kode captcha salah. Silakan coba lagi.', 'error');
+    generateAdminCaptcha();
+    const inputEl = document.getElementById('adminCaptchaInput');
+    if (inputEl) inputEl.focus();
+    return;
+  }
+
   const users = Storage.getUsers();
   const match = users.find(
     (u) => u.id.toLowerCase() === id.toLowerCase() && u.pw === pw
   );
 
   if (match) {
-    sessionStorage.removeItem('pupr_explicit_logout');
+    sessionStorage.removeItem('pu_explicit_logout');
     hideLoginAlert();
     currentUser = match;
     Storage.setSession(match);
 
     // Simpan Remember ID jika dicentang
     if (elements.rememberMe && elements.rememberMe.checked) {
-      localStorage.setItem('pupr_remembered_id', match.id);
+      localStorage.setItem('pu_remembered_id', match.id);
     } else {
-      localStorage.removeItem('pupr_remembered_id');
+      localStorage.removeItem('pu_remembered_id');
     }
 
     showToast('Berhasil Masuk', `Selamat datang, ${match.nama} (${match.role || 'Pegawai'}).`, 'success');
@@ -1634,7 +1693,7 @@ function handleBarcodeLogin(e) {
   const match = users.find((u) => u.id.toLowerCase() === rawCode.toLowerCase());
 
   if (match) {
-    sessionStorage.removeItem('pupr_explicit_logout');
+    sessionStorage.removeItem('pu_explicit_logout');
     hideLoginAlert();
     currentUser = match;
     Storage.setSession(match);
@@ -1695,7 +1754,7 @@ function handleRegister(e) {
 function handleLogout() {
   currentUser = null;
   Storage.clearSession();
-  sessionStorage.setItem('pupr_explicit_logout', 'true');
+  sessionStorage.setItem('pu_explicit_logout', 'true');
   showToast('Keluar', 'Sesi telah diakhiri.', 'info');
   showView('auth');
 }
@@ -1911,7 +1970,7 @@ function initEvents() {
   if (elements.btnSimulateScan) {
     elements.btnSimulateScan.addEventListener('click', () => {
       if (elements.barcodeInput) {
-        elements.barcodeInput.value = 'PUPR-SUP01';
+        elements.barcodeInput.value = 'PU-SUP01';
         handleBarcodeLogin();
       }
     });
@@ -2099,16 +2158,16 @@ function renderPublicReportsTable() {
 
     return `
       <tr>
-        <td><strong style="color:var(--pupr-navy);">${escapeHtml(r.ticket)}</strong></td>
+        <td><strong style="color:var(--pu-navy);">${escapeHtml(r.ticket)}</strong></td>
         <td><span style="font-size:0.8rem; color:var(--text-muted);">${escapeHtml(r.date)}</span></td>
         <td>
           <div style="font-weight:700; color:var(--text-primary);">${escapeHtml(r.reporterName)}</div>
-          <div style="font-size:0.75rem; color:var(--text-muted);">${escapeHtml(r.originAgency || '-')} &bull; <span style="color:var(--pupr-navy);">${escapeHtml(r.gender || '')}</span></div>
+          <div style="font-size:0.75rem; color:var(--text-muted);">${escapeHtml(r.originAgency || '-')} &bull; <span style="color:var(--pu-navy);">${escapeHtml(r.gender || '')}</span></div>
         </td>
         <td><span style="font-size:0.8rem; font-weight:600; color:#0F294A;">${escapeHtml(r.applicantCategory || '-')}</span></td>
         <td><span class="badge-role" style="background:#F1F5F9; color:#334155; font-size:0.75rem;">${escapeHtml(r.serviceType || '-')}</span></td>
         <td style="max-width:200px; font-size:0.82rem; font-weight:600;">${escapeHtml(r.subject || '-')}</td>
-        <td><span class="badge-unit">${escapeHtml(r.targetUnit || r.unit || 'Umum PUPR')}</span></td>
+        <td><span class="badge-unit">${escapeHtml(r.targetUnit || r.unit || 'Umum PU')}</span></td>
         <td>${statusBadge}</td>
       </tr>
     `;
@@ -2141,7 +2200,7 @@ function handlePublicReportSubmit(e) {
 
   // Buat nomor tiket unik
   const randomNum = Math.floor(1000 + Math.random() * 9000);
-  const ticket = `PUPR-PUB-${randomNum}`;
+  const ticket = `PU-PUB-${randomNum}`;
 
   const now = new Date();
   const dateStr = now.getFullYear() + '-' +
@@ -2196,7 +2255,7 @@ function handlePublicReportSubmit(e) {
   if (elements.trackTicketInput) elements.trackTicketInput.value = ticket;
   showTicketResult(newReport, true);
 
-  showToast('Permohonan Terkirim', `Laporan Anda berhasil dicatat dengan No. Tiket ${ticket} dan telah diteruskan ke Staf & Admin PUPR.`, 'success');
+  showToast('Permohonan Terkirim', `Laporan Anda berhasil dicatat dengan No. Tiket ${ticket} dan telah diteruskan ke Staf & Admin PU.`, 'success');
 }
 
 // Penentuan Unit Otomatis (Smart Dispatch ke Staf/Admin terkait)
@@ -2316,7 +2375,7 @@ function renderInboxPublicPage() {
     // Kolom Disposisi Unit: Hanya Super Admin / PIC yang berhak menentukan/mengubah disposisi ke Bidang
     let disposisiHtml = '';
     if (isSuperAdmin) {
-      const optionsHtml = DAFTAR_UNIT_PUPR.map(u => `
+      const optionsHtml = DAFTAR_UNIT_PU.map(u => `
         <option value="${escapeHtml(u)}" ${currentUnit === u ? 'selected' : ''}>${escapeHtml(u)}</option>
       `).join('');
 
@@ -2375,7 +2434,7 @@ function renderInboxPublicPage() {
         <td style="text-align:center;">
           <input type="checkbox" class="inbox-checkbox" value="${escapeHtml(r.ticket)}" style="cursor:pointer; width:16px; height:16px; accent-color:#059669;">
         </td>
-        <td><strong style="color:var(--pupr-navy); font-family:monospace; font-size:0.9rem;">${escapeHtml(r.ticket)}</strong></td>
+        <td><strong style="color:var(--pu-navy); font-family:monospace; font-size:0.9rem;">${escapeHtml(r.ticket)}</strong></td>
         <td><span style="font-size:0.8rem; color:var(--text-muted);">${escapeHtml(r.date)}</span></td>
         <td>
           <div style="font-weight:700; color:var(--text-primary);">${escapeHtml(r.reporterName)}</div>
@@ -2398,7 +2457,7 @@ function renderInboxPublicPage() {
           <div style="font-size:0.72rem; color:var(--text-muted);">${escapeHtml(r.applicantCategory || '-')}</div>
         </td>
         <td style="max-width:230px;">
-          <div style="font-weight:700; font-size:0.83rem; color:var(--pupr-navy);">${escapeHtml(r.subject || '-')}</div>
+          <div style="font-weight:700; font-size:0.83rem; color:var(--pu-navy);">${escapeHtml(r.subject || '-')}</div>
           <div style="font-size:0.75rem; color:var(--text-secondary); margin-top:0.2rem; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">
             ${escapeHtml(r.description || '-')}
           </div>
@@ -2605,7 +2664,7 @@ window.handleSimpanSuratBalasan = function (e) {
   };
 
   target.status = 'Selesai Ditangani';
-  localStorage.setItem('pupr_public_reports', JSON.stringify(reports));
+  localStorage.setItem('pu_public_reports', JSON.stringify(reports));
 
   Storage.addAuditLog(
     currentUser ? currentUser.id : 'ADMIN',
@@ -2833,7 +2892,7 @@ window.updatePublicReportDisposisi = function (ticket, newUnit) {
   const oldUnit = target.targetUnit || target.unit || 'Belum Didisposisi';
   target.targetUnit = newUnit;
   target.unit = newUnit;
-  localStorage.setItem('pupr_public_reports', JSON.stringify(reports));
+  localStorage.setItem('pu_public_reports', JSON.stringify(reports));
 
   Storage.addAuditLog(
     currentUser.id,
@@ -2861,7 +2920,7 @@ window.toggleAccSingle = function (ticket) {
 
   const willApprove = !(target.status.includes('Selesai') || target.status.includes('Disetujui'));
   target.status = willApprove ? 'Selesai Ditangani' : 'Menunggu Verifikasi Dinas';
-  localStorage.setItem('pupr_public_reports', JSON.stringify(reports));
+  localStorage.setItem('pu_public_reports', JSON.stringify(reports));
   // Sinkronkan hasil ACC ke Cloud Firebase
   syncReportToCloud(target);
 
@@ -2902,7 +2961,7 @@ function handleBatchApproveInbox() {
     }
   });
 
-  localStorage.setItem('pupr_public_reports', JSON.stringify(reports));
+  localStorage.setItem('pu_public_reports', JSON.stringify(reports));
 
   Storage.addAuditLog(
     currentUser.id,
@@ -2954,7 +3013,7 @@ function exportInboxPublicCsv() {
   const url = URL.createObjectURL(blob);
   const link = document.createElement('a');
   link.href = url;
-  link.setAttribute('download', `Rekap_Laporan_Publik_PUPR_${new Date().toISOString().slice(0, 10)}.csv`);
+  link.setAttribute('download', `Rekap_Laporan_Publik_PU_${new Date().toISOString().slice(0, 10)}.csv`);
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
@@ -2975,7 +3034,7 @@ window.updatePublicReportStatus = function (ticket, newStatus) {
   if (!target) return;
 
   target.status = newStatus;
-  localStorage.setItem('pupr_public_reports', JSON.stringify(reports));
+  localStorage.setItem('pu_public_reports', JSON.stringify(reports));
   // Sinkronkan perubahan status ke Cloud Firebase agar tamu di HP langsung melihat status barunya
   syncReportToCloud(target);
 
@@ -3011,7 +3070,7 @@ function handleTrackTicket() {
         <div style="background:#FEF2F2; border:1px solid #F87171; border-radius:var(--radius-sm); padding:1.25rem; color:#991B1B;">
           <strong>Nomor Tiket "${escapeHtml(query)}" Tidak Ditemukan</strong>
           <p style="font-size:0.85rem; margin-top:0.35rem; color:#B91C1C;">
-            Pastikan format nomor tiket benar (Contoh: PUPR-PUB-1001) atau periksa kembali tanda bukti permohonan Anda.
+            Pastikan format nomor tiket benar (Contoh: PU-PUB-1001) atau periksa kembali tanda bukti permohonan Anda.
           </p>
         </div>
       `;
@@ -3033,13 +3092,13 @@ function showTicketResult(r, isJustSubmitted) {
       ${isJustSubmitted ? `
         <div style="background:#DCFCE7; color:#166534; padding:0.65rem 1rem; border-radius:var(--radius-sm); font-weight:700; font-size:0.88rem; margin-bottom:1rem; display:flex; align-items:center; gap:0.5rem;">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:18px;height:18px;"><polyline points="20 6 9 17 4 12"></polyline></svg>
-          Permohonan / Laporan Berhasil Diterima oleh Sistem dan Langsung Diteruskan ke Admin/Staf PUPR
+          Permohonan / Laporan Berhasil Diterima oleh Sistem dan Langsung Diteruskan ke Admin/Staf PU
         </div>
       ` : ''}
       <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:1rem; border-bottom:1px solid var(--border-color); padding-bottom:1rem; margin-bottom:1rem;">
         <div>
           <span style="font-size:0.75rem; text-transform:uppercase; font-weight:700; color:var(--text-muted);">Nomor Tiket Resmi</span>
-          <div style="font-size:1.4rem; font-weight:800; color:var(--pupr-navy);">${escapeHtml(r.ticket)}</div>
+          <div style="font-size:1.4rem; font-weight:800; color:var(--pu-navy);">${escapeHtml(r.ticket)}</div>
         </div>
         <div style="text-align:right;">
           <span style="font-size:0.75rem; text-transform:uppercase; font-weight:700; color:var(--text-muted);">Status Saat Ini</span>
@@ -3058,7 +3117,7 @@ function showTicketResult(r, isJustSubmitted) {
         </div>
         <div>
           <div style="font-size:0.75rem; color:var(--text-muted); font-weight:600;">Asal Instansi</div>
-          <div style="font-weight:700; color:var(--pupr-navy);">${escapeHtml(r.originAgency || '-')}</div>
+          <div style="font-weight:700; color:var(--pu-navy);">${escapeHtml(r.originAgency || '-')}</div>
         </div>
         <div>
           <div style="font-size:0.75rem; color:var(--text-muted); font-weight:600;">Kategori Pemohon</div>
@@ -3070,7 +3129,7 @@ function showTicketResult(r, isJustSubmitted) {
         </div>
         <div>
           <div style="font-size:0.75rem; color:var(--text-muted); font-weight:600;">Disposisi Petugas Unit</div>
-          <div style="font-weight:700; color:var(--pupr-navy);">${escapeHtml(r.targetUnit || r.unit || 'Sekretariat Jenderal')}</div>
+          <div style="font-weight:700; color:var(--pu-navy);">${escapeHtml(r.targetUnit || r.unit || 'Sekretariat Jenderal')}</div>
         </div>
         <div>
           <div style="font-size:0.75rem; color:var(--text-muted); font-weight:600;">Tanggal Pengajuan</div>
@@ -3084,7 +3143,7 @@ function showTicketResult(r, isJustSubmitted) {
 
       <div style="margin-bottom:0.75rem;">
         <div style="font-size:0.75rem; color:var(--text-muted); font-weight:600;">Perihal</div>
-        <div style="font-size:1rem; font-weight:700; color:var(--pupr-navy);">${escapeHtml(r.subject || '-')}</div>
+        <div style="font-size:1rem; font-weight:700; color:var(--pu-navy);">${escapeHtml(r.subject || '-')}</div>
       </div>
 
       <div style="margin-bottom:0.75rem;">
@@ -3103,8 +3162,8 @@ function showTicketResult(r, isJustSubmitted) {
 }
 
 // Fungsi Masuk Cepat (Quick Login 1-Klik)
-window.quickLogin = function (userId = 'PUPR-SUP01') {
-  sessionStorage.removeItem('pupr_explicit_logout');
+window.quickLogin = function (userId = 'PU-SUP01') {
+  sessionStorage.removeItem('pu_explicit_logout');
   const users = Storage.getUsers();
   const user = users.find((u) => u.id.toLowerCase() === userId.toLowerCase()) || users[0];
   if (user) {
@@ -3123,7 +3182,7 @@ function initApp() {
 
   // Sinkronisasi otomatis data antar tab/jendela (Laporan tamu langsung masuk ke admin)
   window.addEventListener('storage', function (e) {
-    if (e.key === 'pupr_public_reports') {
+    if (e.key === 'pu_public_reports') {
       updateInboxBadge();
       if (elements.inboxTableBody) renderInboxPublicPage();
     }
@@ -3163,7 +3222,7 @@ function initApp() {
   }
 
   // Muat Remember ID jika pernah disimpan
-  const rememberedId = localStorage.getItem('pupr_remembered_id');
+  const rememberedId = localStorage.getItem('pu_remembered_id');
   if (rememberedId) {
     const loginIdInput = document.getElementById('loginId');
     if (loginIdInput) loginIdInput.value = rememberedId;
@@ -3328,7 +3387,7 @@ window.superAdminBantuReset = function (reqId, userId) {
     return;
   }
 
-  const newPw = prompt(`Masukkan kata sandi baru untuk ${targetUser.nama} (${userId}):`, 'pupr123');
+  const newPw = prompt(`Masukkan kata sandi baru untuk ${targetUser.nama} (${userId}):`, 'pu123');
   if (!newPw) return;
 
   if (newPw.length < 6) {
@@ -3389,7 +3448,7 @@ window.bantuResetPassword = function (userId) {
   const konfirmasi = confirm(`Akun: ${targetUser.nama} (${targetUser.id})\nKata Sandi Saat Ini: "${sandiSaatIni}"\n\nApakah Anda ingin mengganti kata sandinya dengan yang baru?`);
   if (!konfirmasi) return;
 
-  const newPw = prompt(`Ketikkan kata sandi baru untuk ${targetUser.nama}:`, 'pupr123');
+  const newPw = prompt(`Ketikkan kata sandi baru untuk ${targetUser.nama}:`, 'pu123');
   if (!newPw) return;
 
   if (newPw.length < 6) {
@@ -3413,5 +3472,8 @@ window.bantuResetPassword = function (userId) {
   renderDashboardTable();
 };
 
-document.addEventListener('DOMContentLoaded', initApp);
+document.addEventListener('DOMContentLoaded', () => {
+  initApp();
+  setTimeout(generateAdminCaptcha, 300);
+});
 
