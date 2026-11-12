@@ -470,41 +470,6 @@
 
           </div>
 
-          <!-- KOTAK VERIFIKASI KEAMANAN: CAPTCHA KODE ACAK (HURUF & ANGKA) -->
-          <div style="background:#F8FAFC; border:1.5px solid #CBD5E1; border-radius:12px; padding:1.1rem 1.25rem; margin-bottom:1.25rem; box-shadow:0 2px 6px rgba(0,0,0,0.04);">
-            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.75rem; border-bottom:1px solid #E2E8F0; padding-bottom:0.5rem;">
-              <div style="display:flex; align-items:center; gap:0.4rem; font-weight:800; font-size:0.88rem; color:#0F294A;">
-                <span>🤖</span> <span>Verifikasi Keamanan (Anti-Bot)</span>
-              </div>
-              <span style="font-size:0.72rem; color:#64748B; font-weight:600;">PU Security Check</span>
-            </div>
-
-            <p style="font-size:0.82rem; color:#475569; margin:0 0 0.75rem 0;">
-              Ketik huruf dan angka acak yang terlihat pada gambar kotak di bawah ini:
-            </p>
-
-            <div style="display:flex; align-items:center; gap:0.75rem; flex-wrap:wrap;">
-              <!-- Canvas Tampilan Gambar Karakter Acak -->
-              <div style="position:relative; display:inline-flex; align-items:center; border:1.5px solid #94A3B8; border-radius:8px; overflow:hidden; background:#E2E8F0;">
-                <canvas id="captchaCanvas" width="160" height="46" style="display:block; cursor:pointer;" title="Klik untuk refresh kode" onclick="generateCaptchaCode()"></canvas>
-              </div>
-
-              <!-- Tombol Ganti / Refresh Kode -->
-              <button type="button" onclick="generateCaptchaCode()" class="btn-secondary"
-                style="padding:0.55rem 0.85rem; font-size:0.85rem; display:inline-flex; align-items:center; gap:0.35rem; border-radius:8px; background:#fff; border:1px solid #CBD5E1; color:#0F294A; font-weight:700; cursor:pointer;">
-                🔄 <span>Ganti Kode</span>
-              </button>
-
-              <!-- Input Jawaban Pengguna -->
-              <div style="flex:1; min-width:140px;">
-                <input type="text" id="inputCaptchaUser" class="form-control" maxlength="6"
-                  placeholder="Ketik 5 kode di sini"
-                  style="font-size:1.05rem; font-weight:800; letter-spacing:3px; text-transform:uppercase; text-align:center; padding:0.6rem; border:2px solid #CBD5E1; border-radius:8px; background:#fff;">
-              </div>
-            </div>
-            <div id="captchaFeedback" style="font-size:0.78rem; font-weight:700; margin-top:0.45rem; display:none;"></div>
-          </div>
-
           <button type="submit" id="btnSubmitLaporanTamu" class="btn-primary"
             style="padding:1rem 2rem; font-size:1.05rem; width:100%; font-weight:800; background:linear-gradient(135deg, #0F294A 0%, #1E3A8A 100%); border:none; border-radius:10px; box-shadow:0 4px 14px rgba(15,41,74,0.3); cursor:pointer; display:flex; align-items:center; justify-content:center; gap:0.5rem;">
             <span id="btnSubmitTeks">🚀 Kirim Berkas Surat &amp; Cetak Tanda Terima &rarr;</span>
@@ -700,7 +665,7 @@
     </footer>
   </div>
 
-  <script src="app.js?v=7.0"></script>
+  <script src="app.js?v=9.0"></script>
   <script>
     // Live Clock Realtime di Header Portal Tamu (Format: Hari, DD MMMM YYYY • HH:mm:ss WIB)
     function updateTamuClock() {
@@ -1243,116 +1208,8 @@
       `;
     };
 
-    // ==========================================
-    // CAPTCHA KODE ACAK (HURUF & ANGKA RANDOM)
-    // ==========================================
-    let currentCaptchaText = '';
-
-    window.generateCaptchaCode = function () {
-      const chars = '23456789ABCDEFGHJKLMNPQRSTUVWXYZ'; // Tanpa huruf/angka membingungkan seperti O, 0, 1, I
-      let code = '';
-      for (let i = 0; i < 5; i++) {
-        code += chars.charAt(Math.floor(Math.random() * chars.length));
-      }
-      currentCaptchaText = code;
-
-      const canvas = document.getElementById('captchaCanvas');
-      if (!canvas) return;
-      const ctx = canvas.getContext('2d');
-
-      // Bersihkan canvas & latar bertekstur
-      ctx.fillStyle = '#F1F5F9';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-      // Garis gangguan acak (Noise Lines)
-      for (let i = 0; i < 5; i++) {
-        ctx.strokeStyle = ['#CBD5E1', '#94A3B8', '#93C5FD', '#FCA5A5'][Math.floor(Math.random() * 4)];
-        ctx.lineWidth = Math.random() * 2 + 1;
-        ctx.beginPath();
-        ctx.moveTo(Math.random() * canvas.width, Math.random() * canvas.height);
-        ctx.lineTo(Math.random() * canvas.width, Math.random() * canvas.height);
-        ctx.stroke();
-      }
-
-      // Titik gangguan acak (Dots)
-      for (let i = 0; i < 40; i++) {
-        ctx.fillStyle = '#94A3B8';
-        ctx.beginPath();
-        ctx.arc(Math.random() * canvas.width, Math.random() * canvas.height, 1.2, 0, Math.PI * 2);
-        ctx.fill();
-      }
-
-      // Gambar masing-masing karakter dengan rotasi acak
-      const colors = ['#0F294A', '#1E3A8A', '#0369A1', '#047857', '#B45309', '#6B21A8'];
-      const xStart = 18;
-      const spacing = 26;
-
-      for (let i = 0; i < code.length; i++) {
-        const char = code[i];
-        ctx.save();
-        const x = xStart + i * spacing;
-        const y = 31 + (Math.random() * 6 - 3);
-        const angle = (Math.random() * 30 - 15) * Math.PI / 180;
-
-        ctx.translate(x, y);
-        ctx.rotate(angle);
-        ctx.font = 'bold 24px monospace, "Courier New", sans-serif';
-        ctx.fillStyle = colors[i % colors.length];
-        ctx.fillText(char, 0, 0);
-        ctx.restore();
-      }
-
-      // Reset feedback error & input jika ada
-      const inputEl = document.getElementById('inputCaptchaUser');
-      if (inputEl) {
-        inputEl.value = '';
-        inputEl.style.borderColor = '#CBD5E1';
-      }
-      const feedback = document.getElementById('captchaFeedback');
-      if (feedback) feedback.style.display = 'none';
-    };
-
-    // Jalankan pertama kali saat halaman siap
-    window.addEventListener('DOMContentLoaded', function () {
-      setTimeout(generateCaptchaCode, 300);
-    });
-
     document.getElementById('formBukuTamu').addEventListener('submit', function (e) {
       e.preventDefault();
-
-      // Cek Verifikasi Keamanan Captcha Huruf & Angka
-      const userCaptcha = (document.getElementById('inputCaptchaUser').value || '').trim().toUpperCase();
-      const inputEl = document.getElementById('inputCaptchaUser');
-      const feedback = document.getElementById('captchaFeedback');
-
-      if (!userCaptcha) {
-        showToast('Keamanan Terproteksi', 'Silakan masukkan 5 karakter kode acak (huruf & angka) terlebih dahulu.', 'error');
-        if (inputEl) {
-          inputEl.style.borderColor = '#DC2626';
-          inputEl.focus();
-        }
-        if (feedback) {
-          feedback.style.display = 'block';
-          feedback.style.color = '#DC2626';
-          feedback.textContent = '⚠️ Wajib diisi: masukkan kode acak di atas';
-        }
-        return;
-      }
-
-      if (userCaptcha !== currentCaptchaText) {
-        showToast('Verifikasi Gagal', 'Kode acak salah. Silakan coba masukkan kembali kode yang baru.', 'error');
-        if (inputEl) {
-          inputEl.style.borderColor = '#DC2626';
-          inputEl.focus();
-        }
-        if (feedback) {
-          feedback.style.display = 'block';
-          feedback.style.color = '#DC2626';
-          feedback.textContent = '❌ Kode salah! Kode baru telah dibuat, silakan ketik ulang.';
-        }
-        generateCaptchaCode(); // Ganti kode acak baru
-        return;
-      }
 
       const nama = document.getElementById('tamuNama').value.trim();
       const hp = document.getElementById('tamuHp').value.trim();
