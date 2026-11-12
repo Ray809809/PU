@@ -31,7 +31,8 @@
 
         <div class="pu-brand" style="display:flex; align-items:center; gap:0.75rem;">
           <div class="logo-shine-wrapper">
-            <img src="logo-pu.webp" alt="Logo PU" class="pu-logo-img" style="width:40px; height:40px; object-fit:contain; border-radius:6px; flex-shrink:0;">
+            <img src="logo-pu.webp" alt="Logo PU" class="pu-logo-img"
+              style="width:40px; height:40px; object-fit:contain; border-radius:6px; flex-shrink:0;">
           </div>
           <div class="pu-brand-text">
             <span class="pu-brand-title">PU PEKERJAAN UMUM</span>
@@ -255,16 +256,21 @@
                   </div>
 
                   <!-- VERIFIKASI KEAMANAN ADMIN (ANTI-BOT / CAPTCHA KODE ACAK) -->
-                  <div style="background:#F8FAFC; border:1px solid #CBD5E1; border-radius:8px; padding:0.85rem; margin-bottom:1.15rem;">
+                  <div
+                    style="background:#F8FAFC; border:1px solid #CBD5E1; border-radius:8px; padding:0.85rem; margin-bottom:1.15rem;">
                     <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.4rem;">
-                      <span style="font-size:0.75rem; font-weight:800; color:#0F294A; display:flex; align-items:center; gap:0.3rem;">
+                      <span
+                        style="font-size:0.75rem; font-weight:800; color:#0F294A; display:flex; align-items:center; gap:0.3rem;">
                         <span>🤖</span> Verifikasi Keamanan Pegawai
                       </span>
                       <span style="font-size:0.68rem; color:#64748B;">Anti-Bruteforce</span>
                     </div>
                     <div style="display:flex; align-items:center; gap:0.5rem;">
-                      <canvas id="adminCaptchaCanvas" width="135" height="38" style="background:#E2E8F0; border-radius:6px; cursor:pointer;" title="Klik untuk refresh kode" onclick="generateAdminCaptcha()"></canvas>
-                      <button type="button" onclick="generateAdminCaptcha()" title="Ganti Kode" style="background:#fff; border:1px solid #CBD5E1; border-radius:6px; padding:0.45rem 0.6rem; cursor:pointer; font-size:0.85rem;">🔄</button>
+                      <canvas id="adminCaptchaCanvas" width="135" height="38"
+                        style="background:#E2E8F0; border-radius:6px; cursor:pointer;" title="Klik untuk refresh kode"
+                        onclick="generateAdminCaptcha()"></canvas>
+                      <button type="button" onclick="generateAdminCaptcha()" title="Ganti Kode"
+                        style="background:#fff; border:1px solid #CBD5E1; border-radius:6px; padding:0.45rem 0.6rem; cursor:pointer; font-size:0.85rem;">🔄</button>
                       <input type="text" id="adminCaptchaInput" maxlength="5" placeholder="5 KODE" class="form-control"
                         style="text-transform:uppercase; font-weight:800; letter-spacing:2px; text-align:center; padding:0.45rem; font-size:0.92rem; flex:1;">
                     </div>
@@ -1070,7 +1076,7 @@
                             style="cursor:pointer; width:16px; height:16px; accent-color:#059669;">
                         </th>
                         <th style="width:110px;">No. Tiket</th>
-                        <th style="width:125px;">Tanggal</th>
+                        <th style="width:145px;">Tanggal &amp; Deadline Realtime</th>
                         <th>Pemohon &amp; Asal Instansi</th>
                         <th>Kategori &amp; Layanan</th>
                         <th>Perihal Permohonan</th>
@@ -1627,6 +1633,65 @@
             <button type="submit" class="btn-primary btn-sm"
               style="background:#153E75; border-color:#153E75; width:auto; font-weight:700;">
               🚀 Simpan &amp; Terbitkan Surat Balasan
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Modal Set Deadline / Batas Waktu Tindak Lanjut Laporan -->
+    <div class="modal-overlay" id="modalSetDeadline" role="dialog" aria-modal="true" aria-labelledby="titleSetDeadline">
+      <div class="modal-box" style="max-width: 480px;">
+        <div class="modal-header-bar" style="background:#0F294A; color:#fff;">
+          <h3 id="titleSetDeadline" style="color:#fff; font-size:1.05rem; display:flex; align-items:center; gap:0.5rem;">
+            <span>⏱️</span> Atur Deadline &amp; Target Waktu Laporan
+          </h3>
+          <button type="button" class="btn-modal-close" onclick="closeModalDeadline()" aria-label="Tutup" style="color:#fff;">&times;</button>
+        </div>
+
+        <form id="formSetDeadline" onsubmit="handleSaveDeadline(event)">
+          <div class="modal-content-body" style="padding:1.25rem;">
+            <input type="hidden" id="deadlineTicket">
+
+            <div style="background:#EFF6FF; border:1px solid #BFDBFE; border-radius:8px; padding:0.85rem; margin-bottom:1rem;">
+              <div style="font-size:0.75rem; color:#1E3A8A; font-weight:800; text-transform:uppercase;">No. Tiket:</div>
+              <div style="font-size:1.2rem; font-weight:900; color:#0F294A; font-family:monospace;" id="deadlineTicketDisplay"></div>
+              <div style="font-size:0.8rem; color:#475569; margin-top:2px;">Pelapor: <strong id="deadlineReporterDisplay"></strong></div>
+              <div style="font-size:0.78rem; color:#64748B;">Waktu Lapor: <span id="deadlineReportDateDisplay"></span></div>
+            </div>
+
+            <!-- Preset Cepat Deadline -->
+            <div class="form-field" style="margin-bottom:1rem;">
+              <label class="field-label" style="font-weight:700;">Pilih Preset Cepat Target Deadline</label>
+              <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:0.5rem; margin-top:0.35rem;">
+                <button type="button" class="btn-secondary btn-sm" onclick="setDeadlinePreset(1)" style="font-size:0.75rem; padding:0.4rem;">🚨 24 Jam</button>
+                <button type="button" class="btn-secondary btn-sm" onclick="setDeadlinePreset(3)" style="font-size:0.75rem; padding:0.4rem;">📅 3 Hari</button>
+                <button type="button" class="btn-secondary btn-sm" onclick="setDeadlinePreset(7)" style="font-size:0.75rem; padding:0.4rem;">📆 7 Hari</button>
+              </div>
+            </div>
+
+            <!-- Input Kustom Tanggal & Waktu Deadline -->
+            <div class="form-field" style="margin-bottom:1rem;">
+              <label class="field-label" for="inputDeadlineDate" style="font-weight:700; color:#0F294A;">
+                Target Tanggal &amp; Jam Batas Waktu (Deadline) <span style="color:#DC2626;">*</span>
+              </label>
+              <input type="datetime-local" id="inputDeadlineDate" class="form-control" required style="font-size:0.95rem; font-weight:700; padding:0.6rem;">
+              <span style="font-size:0.72rem; color:#64748B; margin-top:0.25rem; display:block;">
+                Pilih tanggal dan jam batas akhir penyelesaian laporan oleh tim/bidang dinas.
+              </span>
+            </div>
+
+            <!-- Catatan SLA / Prioritas -->
+            <div class="form-field">
+              <label class="field-label" for="inputDeadlineNotes" style="font-weight:700;">Catatan / Tingkat Prioritas Target</label>
+              <input type="text" id="inputDeadlineNotes" class="form-control" placeholder="Contoh: Sangat Mendesak / Penanganan Darurat Longsor" style="font-size:0.85rem;">
+            </div>
+          </div>
+
+          <div class="modal-footer-bar">
+            <button type="button" class="btn-secondary btn-sm" onclick="closeModalDeadline()">Batal</button>
+            <button type="submit" class="btn-primary btn-sm" style="background:#0F294A; border-color:#0F294A; font-weight:700; width:auto;">
+              💾 Simpan Batas Waktu
             </button>
           </div>
         </form>
