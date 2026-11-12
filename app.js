@@ -79,6 +79,21 @@ function calculateDeadlineCountdown(deadlineStr) {
   return { isExpired: false, text, diff, days, hours, minutes, seconds };
 }
 
+// Format tanggal lengkap dengan nama hari untuk tampilan kedinasan
+function formatTanggalLengkap(dateStr) {
+  if (!dateStr) return '-';
+  try {
+    const d = new Date(dateStr.replace(' ', 'T'));
+    if (isNaN(d.getTime())) return dateStr;
+    const hari = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'][d.getDay()];
+    const bulan = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'][d.getMonth()];
+    const pad = (n) => String(n).padStart(2, '0');
+    return `${hari}, ${d.getDate()} ${bulan} ${d.getFullYear()} • ${pad(d.getHours())}:${pad(d.getMinutes())} WIB`;
+  } catch (e) {
+    return dateStr;
+  }
+}
+
 // Render Badge Status Deadline di Tabel Admin
 function renderDeadlineBadge(report) {
   const isSelesai = report.status === 'Selesai Ditangani' || (report.replyLetter && report.replyLetter.date);
@@ -110,8 +125,8 @@ function renderDeadlineBadge(report) {
 
   if (countdown.isExpired) {
     return `
-      <div style="margin-top:3px; background:#FEF2F2; border:1px solid #F87171; color:#DC2626; padding:2px 5px; border-radius:4px; font-size:0.68rem; font-weight:800; display:inline-block;" title="Batas waktu: ${cleanDeadlineDisplay}">
-        🚨 ${countdown.text}
+      <div style="margin-top:4px; background:#FEF2F2; border:1px solid #F87171; color:#DC2626; padding:3px 6px; border-radius:4px; font-size:0.7rem; font-weight:800; display:inline-flex; align-items:center; gap:3px;" title="Batas waktu: ${cleanDeadlineDisplay}">
+        <span>🚨</span> <span>${countdown.text}</span>
       </div>
     `;
   }
@@ -122,8 +137,8 @@ function renderDeadlineBadge(report) {
   const textColor = isWarning ? '#B45309' : '#1D4ED8';
 
   return `
-    <div style="margin-top:3px; background:${bg}; border:1px solid ${border}; color:${textColor}; padding:2px 5px; border-radius:4px; font-size:0.68rem; font-weight:700; display:inline-block;" title="Target: ${cleanDeadlineDisplay}">
-      ⏳ ${countdown.text}
+    <div style="margin-top:4px; background:${bg}; border:1px solid ${border}; color:${textColor}; padding:3px 6px; border-radius:4px; font-size:0.7rem; font-weight:700; display:inline-flex; align-items:center; gap:3px;" title="Target: ${cleanDeadlineDisplay}">
+      <span>⏳</span> <span>${countdown.text}</span>
     </div>
   `;
 }
@@ -2532,13 +2547,20 @@ function renderInboxPublicPage() {
           <input type="checkbox" class="inbox-checkbox" value="${escapeHtml(r.ticket)}" style="cursor:pointer; width:16px; height:16px; accent-color:#059669;">
         </td>
         <td><strong style="color:var(--pu-navy); font-family:monospace; font-size:0.9rem;">${escapeHtml(r.ticket)}</strong></td>
-        <td>
-          <div style="font-size:0.78rem; color:#475569; font-weight:600;">${escapeHtml(r.date)}</div>
+        <td style="min-width:210px;">
+          <!-- Badge Mulai Surat Masuk (Persis Desain Topbar) -->
+          <div style="background:#0F2D59; border:1px solid #1E40AF; border-radius:6px; padding:0.35rem 0.55rem; color:#fff; display:inline-flex; align-items:center; gap:0.4rem; font-size:0.75rem; font-weight:700; box-shadow:0 1px 4px rgba(15,45,89,0.25);">
+            <span style="color:#FABE2C; font-size:0.85rem;">🕒</span>
+            <span style="letter-spacing:0.2px;">Mulai: ${escapeHtml(formatTanggalLengkap(r.date))}</span>
+          </div>
+
+          <!-- Badge Countdown Deadline -->
           ${deadlineBadgeHtml}
+
           ${isSuperAdmin ? `
-            <div style="margin-top:4px;">
+            <div style="margin-top:5px;">
               <button type="button" onclick="openModalDeadline('${escapeHtml(r.ticket)}')" 
-                style="background:#F1F5F9; border:1px solid #CBD5E1; color:#0F294A; font-size:0.68rem; font-weight:700; padding:2px 6px; border-radius:4px; cursor:pointer; display:inline-flex; align-items:center; gap:2px;"
+                style="background:#F1F5F9; border:1px solid #CBD5E1; color:#0F294A; font-size:0.68rem; font-weight:700; padding:2px 8px; border-radius:4px; cursor:pointer; display:inline-flex; align-items:center; gap:3px;"
                 title="Atur target batas waktu (deadline) penanganan laporan">
                 ⏱️ Atur Deadline
               </button>
