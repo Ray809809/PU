@@ -2547,18 +2547,26 @@ function renderInboxPublicPage() {
           <input type="checkbox" class="inbox-checkbox" value="${escapeHtml(r.ticket)}" style="cursor:pointer; width:16px; height:16px; accent-color:#059669;">
         </td>
         <td><strong style="color:var(--pu-navy); font-family:monospace; font-size:0.9rem;">${escapeHtml(r.ticket)}</strong></td>
-        <td style="min-width:210px;">
-          <!-- Badge Mulai Surat Masuk (Persis Desain Topbar) -->
-          <div style="background:#0F2D59; border:1px solid #1E40AF; border-radius:6px; padding:0.35rem 0.55rem; color:#fff; display:inline-flex; align-items:center; gap:0.4rem; font-size:0.75rem; font-weight:700; box-shadow:0 1px 4px rgba(15,45,89,0.25);">
+        <!-- Kolom 1: Tanggal Mulai Surat -->
+        <td>
+          <div style="font-weight:700; color:#0F294A; font-size:0.83rem;">${escapeHtml(r.date)}</div>
+          <div style="font-size:0.7rem; color:#64748B; margin-top:2px;">Surat Masuk Resmi</div>
+        </td>
+        <!-- Kolom 2: Jam Realtime & Deadline SLA -->
+        <td style="text-align:center; min-width:180px;">
+          <!-- Badge Jam Kedinasan Realtime -->
+          <div style="background:#0F2D59; border:1px solid #1E40AF; border-radius:6px; padding:0.35rem 0.6rem; color:#fff; display:inline-flex; align-items:center; gap:0.4rem; font-size:0.75rem; font-weight:700; box-shadow:0 1px 4px rgba(15,45,89,0.25);">
             <span style="color:#FABE2C; font-size:0.85rem;">🕒</span>
-            <span style="letter-spacing:0.2px;">Mulai: ${escapeHtml(formatTanggalLengkap(r.date))}</span>
+            <span class="realtime-clock-live" style="letter-spacing:0.2px;">${formatTanggalLengkap(formatCurrentDateTime(true))}</span>
           </div>
 
-          <!-- Badge Countdown Deadline -->
-          ${deadlineBadgeHtml}
+          <!-- Countdown Batas Waktu / Status Selesai -->
+          <div>
+            ${deadlineBadgeHtml}
+          </div>
 
           ${isSuperAdmin ? `
-            <div style="margin-top:5px;">
+            <div style="margin-top:4px;">
               <button type="button" onclick="openModalDeadline('${escapeHtml(r.ticket)}')" 
                 style="background:#F1F5F9; border:1px solid #CBD5E1; color:#0F294A; font-size:0.68rem; font-weight:700; padding:2px 8px; border-radius:4px; cursor:pointer; display:inline-flex; align-items:center; gap:3px;"
                 title="Atur target batas waktu (deadline) penanganan laporan">
@@ -2726,14 +2734,24 @@ window.handleSaveDeadline = function (e) {
   }
 };
 
-// Interval Realtime Update Deadline Countdown
+// Interval Realtime Update: Berjalan tiap 1 detik untuk jam realtime
+setInterval(() => {
+  const clockNodes = document.querySelectorAll('.realtime-clock-live');
+  if (clockNodes.length > 0) {
+    const currentStr = formatTanggalLengkap(formatCurrentDateTime(true));
+    clockNodes.forEach(node => {
+      node.textContent = currentStr;
+    });
+  }
+}, 1000);
+
+// Interval Realtime Update Deadline Countdown (tiap 10 detik re-render status)
 setInterval(() => {
   const inboxPage = document.getElementById('pageInboxPublic');
   if (inboxPage && inboxPage.classList.contains('active')) {
-    // Re-render countdown tanpa reset scroll jika sedang di halaman inbox
     renderInboxPublicTable();
   }
-}, 10000); // perbarui tiap 10 detik
+}, 10000);
 
 let uploadedFileSuratBase64 = null;
 let uploadedFileSuratName = '';
