@@ -37,6 +37,97 @@ function cleanPhoneForWa(phone) {
   return clean;
 }
 
+// Hitung waktu sisa dan format countdown realtime untuk deadline
+function calculateDeadlineCountdown(deadlineStr) {
+  if (!deadlineStr) return null;
+  const targetTime = new Date(deadlineStr).getTime();
+  if (isNaN(targetTime)) return null;
+
+  const now = new Date().getTime();
+  const diff = targetTime - now;
+
+  if (diff <= 0) {
+    const expiredMinutes = Math.abs(Math.floor(diff / 60000));
+    const expiredHours = Math.floor(expiredMinutes / 60);
+    const expiredDays = Math.floor(expiredHours / 24);
+
+    let text = '';
+    if (expiredDays > 0) {
+      text = `Terlambat ${expiredDays} hari ${expiredHours % 24} jam`;
+    } else if (expiredHours > 0) {
+      text = `Terlambat ${expiredHours} jam`;
+    } else {
+      text = `Terlambat ${expiredMinutes} menit`;
+    }
+    return { isExpired: true, text, diff };
+  }
+
+  const seconds = Math.floor((diff / 1000) % 60);
+  const minutes = Math.floor((diff / 60000) % 60);
+  const hours = Math.floor((diff / 3600000) % 24);
+  const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+
+  let text = '';
+  if (days > 0) {
+    text = `Sisa ${days}h ${hours}j ${minutes}m`;
+  } else if (hours > 0) {
+    text = `Sisa ${hours}j ${minutes}m ${seconds}s`;
+  } else {
+    text = `Sisa ${minutes}m ${seconds}s`;
+  }
+
+  return { isExpired: false, text, diff, days, hours, minutes, seconds };
+}
+
+// Render Badge Status Deadline di Tabel Admin
+function renderDeadlineBadge(report) {
+  const isSelesai = report.status === 'Selesai Ditangani' || (report.replyLetter && report.replyLetter.date);
+  if (isSelesai) {
+    return `<div style="font-size:0.68rem; color:#059669; font-weight:700; margin-top:2px;">✓ Selesai Tuntas</div>`;
+  }
+
+  // Jika deadline belum diset di objek laporan lama, berikan estimasi default 3 hari dari report.date
+  let targetDeadline = report.deadline;
+  if (!targetDeadline) {
+    let baseTime = new Date();
+    if (report.date) {
+      const parsedDate = new Date(report.date.replace(' ', 'T'));
+      if (!isNaN(parsedDate.getTime())) {
+        baseTime = parsedDate;
+      }
+    }
+    const d = new Date(baseTime);
+    d.setDate(d.getDate() + 3);
+    d.setHours(16, 0, 0, 0);
+    const pad = (n) => String(n).padStart(2, '0');
+    targetDeadline = `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  }
+
+  const countdown = calculateDeadlineCountdown(targetDeadline);
+  if (!countdown) return '';
+
+  const cleanDeadlineDisplay = targetDeadline.replace('T', ' ');
+
+  if (countdown.isExpired) {
+    return `
+      <div style="margin-top:3px; background:#FEF2F2; border:1px solid #F87171; color:#DC2626; padding:2px 5px; border-radius:4px; font-size:0.68rem; font-weight:800; display:inline-block;" title="Batas waktu: ${cleanDeadlineDisplay}">
+        🚨 ${countdown.text}
+      </div>
+    `;
+  }
+
+  const isWarning = countdown.diff < 24 * 3600 * 1000; // kurang dari 24 jam
+  const bg = isWarning ? '#FFFBEB' : '#EFF6FF';
+  const border = isWarning ? '#FBBF24' : '#93C5FD';
+  const textColor = isWarning ? '#B45309' : '#1D4ED8';
+
+  return `
+    <div style="margin-top:3px; background:${bg}; border:1px solid ${border}; color:${textColor}; padding:2px 5px; border-radius:4px; font-size:0.68rem; font-weight:700; display:inline-block;" title="Target: ${cleanDeadlineDisplay}">
+      ⏳ ${countdown.text}
+    </div>
+  `;
+}
+
 // Format Tanggal & Waktu Kedinasan Resmi (Format Lokal Indonesia YYYY-MM-DD HH:mm:ss atau HH:mm)
 function formatCurrentDateTime(includeSeconds = false) {
   const d = new Date();
@@ -67,6 +158,9 @@ function normalizeReport(r) {
     description: r.description || r.deskripsi || r.uraian || '-',
     surveyConsent: typeof r.surveyConsent === 'boolean' ? r.surveyConsent : true,
     status: r.status || 'Menunggu Verifikasi Dinas',
+    // Batas Waktu / Deadline Penanganan Laporan
+    deadline: r.deadline || null,
+    deadlineNotes: r.deadlineNotes || '',
     // Data Surat Balasan Resmi dari Sakres
     replyLetter: r.replyLetter || null
     // Contoh struktur replyLetter:
@@ -2429,13 +2523,28 @@ function renderInboxPublicPage() {
       balasanHtml = `<span style="font-size:0.75rem; color:#94A3B8;">Belum Dibalas</span>`;
     }
 
+    // Hitung status deadline & countdown realtime
+    const deadlineBadgeHtml = renderDeadlineBadge(r);
+
     return `
       <tr style="${isApproved ? 'background:#F0FDF4;' : ''}">
         <td style="text-align:center;">
           <input type="checkbox" class="inbox-checkbox" value="${escapeHtml(r.ticket)}" style="cursor:pointer; width:16px; height:16px; accent-color:#059669;">
         </td>
         <td><strong style="color:var(--pu-navy); font-family:monospace; font-size:0.9rem;">${escapeHtml(r.ticket)}</strong></td>
-        <td><span style="font-size:0.8rem; color:var(--text-muted);">${escapeHtml(r.date)}</span></td>
+        <td>
+          <div style="font-size:0.78rem; color:#475569; font-weight:600;">${escapeHtml(r.date)}</div>
+          ${deadlineBadgeHtml}
+          ${isSuperAdmin ? `
+            <div style="margin-top:4px;">
+              <button type="button" onclick="openModalDeadline('${escapeHtml(r.ticket)}')" 
+                style="background:#F1F5F9; border:1px solid #CBD5E1; color:#0F294A; font-size:0.68rem; font-weight:700; padding:2px 6px; border-radius:4px; cursor:pointer; display:inline-flex; align-items:center; gap:2px;"
+                title="Atur target batas waktu (deadline) penanganan laporan">
+                ⏱️ Atur Deadline
+              </button>
+            </div>
+          ` : ''}
+        </td>
         <td>
           <div style="font-weight:700; color:var(--text-primary);">${escapeHtml(r.reporterName)}</div>
           <div style="font-size:0.75rem; color:var(--text-muted);">${escapeHtml(r.originAgency || '-')}</div>
@@ -2512,6 +2621,97 @@ function renderInboxPublicPage() {
     `;
   }).join('');
 }
+
+// Modal dan Pengaturan Deadline Laporan
+window.openModalDeadline = function (ticket) {
+  const reports = Storage.getPublicReports();
+  const r = reports.find(item => item.ticket === ticket);
+  if (!r) return;
+
+  const modal = document.getElementById('modalSetDeadline');
+  const ticketInput = document.getElementById('deadlineTicket');
+  const ticketDisplay = document.getElementById('deadlineTicketDisplay');
+  const reporterDisplay = document.getElementById('deadlineReporterDisplay');
+  const dateDisplay = document.getElementById('deadlineReportDateDisplay');
+  const inputDate = document.getElementById('inputDeadlineDate');
+  const inputNotes = document.getElementById('inputDeadlineNotes');
+
+  if (ticketInput) ticketInput.value = r.ticket;
+  if (ticketDisplay) ticketDisplay.textContent = r.ticket;
+  if (reporterDisplay) reporterDisplay.textContent = r.reporterName;
+  if (dateDisplay) dateDisplay.textContent = r.date || '-';
+
+  if (inputDate) {
+    if (r.deadline) {
+      inputDate.value = r.deadline.slice(0, 16);
+    } else {
+      // Default: 3 hari dari sekarang pukul 16:00
+      const d = new Date();
+      d.setDate(d.getDate() + 3);
+      d.setHours(16, 0, 0, 0);
+      const pad = (n) => String(n).padStart(2, '0');
+      inputDate.value = `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+    }
+  }
+
+  if (inputNotes) inputNotes.value = r.deadlineNotes || '';
+
+  if (modal) modal.classList.add('active');
+};
+
+window.closeModalDeadline = function () {
+  const modal = document.getElementById('modalSetDeadline');
+  if (modal) modal.classList.remove('active');
+};
+
+window.setDeadlinePreset = function (days) {
+  const inputDate = document.getElementById('inputDeadlineDate');
+  if (!inputDate) return;
+  const d = new Date();
+  d.setDate(d.getDate() + days);
+  if (days === 1) {
+    // 24 jam tepat dari sekarang
+    d.setTime(new Date().getTime() + 24 * 3600 * 1000);
+  } else {
+    d.setHours(16, 0, 0, 0);
+  }
+  const pad = (n) => String(n).padStart(2, '0');
+  inputDate.value = `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+};
+
+window.handleSaveDeadline = function (e) {
+  e.preventDefault();
+  const ticket = document.getElementById('deadlineTicket').value;
+  const deadlineVal = document.getElementById('inputDeadlineDate').value;
+  const notesVal = document.getElementById('inputDeadlineNotes').value;
+
+  if (!ticket || !deadlineVal) {
+    showToast('Validasi', 'Silakan pilih tanggal dan jam deadline.', 'error');
+    return;
+  }
+
+  const reports = Storage.getPublicReports();
+  const idx = reports.findIndex(item => item.ticket === ticket);
+  if (idx !== -1) {
+    reports[idx].deadline = deadlineVal;
+    reports[idx].deadlineNotes = notesVal;
+    localStorage.setItem('pu_public_reports', JSON.stringify(reports));
+    syncReportToCloud(reports[idx]);
+
+    showToast('Deadline Disimpan', `Target batas waktu untuk tiket ${ticket} berhasil diperbarui.`, 'success');
+    closeModalDeadline();
+    renderInboxPublicTable();
+  }
+};
+
+// Interval Realtime Update Deadline Countdown
+setInterval(() => {
+  const inboxPage = document.getElementById('pageInboxPublic');
+  if (inboxPage && inboxPage.classList.contains('active')) {
+    // Re-render countdown tanpa reset scroll jika sedang di halaman inbox
+    renderInboxPublicTable();
+  }
+}, 10000); // perbarui tiap 10 detik
 
 let uploadedFileSuratBase64 = null;
 let uploadedFileSuratName = '';
