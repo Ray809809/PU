@@ -2604,16 +2604,6 @@ function renderInboxPublicPage() {
           <div>
             ${deadlineBadgeHtml}
           </div>
-
-          ${isSuperAdmin ? `
-            <div style="margin-top:4px;">
-              <button type="button" onclick="openModalDeadline('${escapeHtml(r.ticket)}')" 
-                style="background:#F1F5F9; border:1px solid #CBD5E1; color:#0F294A; font-size:0.68rem; font-weight:700; padding:2px 8px; border-radius:4px; cursor:pointer; display:inline-flex; align-items:center; gap:3px;"
-                title="Atur target batas waktu (deadline) penanganan laporan">
-                ⏱️ Atur Deadline
-              </button>
-            </div>
-          ` : ''}
         </td>
         <td>
           <div style="font-weight:700; color:var(--text-primary);">${escapeHtml(r.reporterName)}</div>
