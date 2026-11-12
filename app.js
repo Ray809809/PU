@@ -510,6 +510,31 @@ const Storage = {
     syncReportToCloud(validReport);
   },
 
+  getAgendaSurat() {
+    const data = localStorage.getItem('pu_agenda_surat_2026');
+    if (!data) {
+      // Data Seed Awal Persis Screenshot Google Spreadsheet Buku Agenda Surat Masuk 2026 BBWS Cimancis
+      const defaultAgenda = [
+        { id: 'AGD-101', tipe: 'Masuk', noSurat: '005/PU-BM/I/2026', tanggal: '2026-01-15', asalTujuan: 'Dinas Bina Marga Prov', perihal: 'Koordinasi Penanganan Jalan Nasional', ceklis: true, bulan: 'Januari' },
+        { id: 'AGD-102', tipe: 'Keluar', noSurat: '800/PU-SKR/II/2026', tanggal: '2026-02-10', asalTujuan: 'Bupati Cirebon', perihal: 'Penyampaian Hasil Rekomtek Sungai', ceklis: true, bulan: 'Februari' },
+        { id: 'AGD-103', tipe: 'Masuk', noSurat: '120/PT-MTR/XI/2026', tanggal: '2026-11-05', asalTujuan: 'PT. Mitra Sentosa Beton', perihal: 'Permohonan Rekomtek Sempadan Irigasi', ceklis: true, bulan: 'November' },
+        { id: 'AGD-104', tipe: 'Masuk', noSurat: '450/DESA-KUTO/XI/2026', tanggal: '2026-11-11', asalTujuan: 'Kepala Desa Sukamaju', perihal: 'Normalisasi Tanggul Kali Cisanggarung', ceklis: false, bulan: 'November' }
+      ];
+      localStorage.setItem('pu_agenda_surat_2026', JSON.stringify(defaultAgenda));
+      return defaultAgenda;
+    }
+    try {
+      const parsed = JSON.parse(data);
+      return Array.isArray(parsed) ? parsed : [];
+    } catch (e) {
+      return [];
+    }
+  },
+
+  saveAgendaSurat(list) {
+    localStorage.setItem('pu_agenda_surat_2026', JSON.stringify(list));
+  },
+
   getResetRequests() {
     const data = localStorage.getItem('pu_reset_requests');
     if (!data) return [];
@@ -1075,6 +1100,9 @@ window.switchSidebarPage = function (targetPageId) {
     renderAuditPage();
   } else if (targetPageId === 'pageInboxPublic') {
     renderInboxPublicPage();
+  } else if (targetPageId === 'pageAgendaSurat') {
+    renderMonitorAgendaSurat();
+    renderDaftarAgendaSurat();
   } else if (targetPageId === 'pageResetRequests') {
     renderResetRequestsTable();
   } else if (targetPageId === 'pageProfile') {
@@ -2732,6 +2760,287 @@ window.handleSaveDeadline = function (e) {
     closeModalDeadline();
     renderInboxPublicTable();
   }
+};
+
+// ==========================================
+// MODUL BUKU AGENDA SURAT MASUK & KELUAR 2026 (SESUAI SPREADSHEET SCREENSHOT)
+// ==========================================
+const NAMA_BULAN_AGENDA = [
+  'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
+  'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
+];
+
+// Data Master Base Bulanan (Persis Google Sheet Screenshot Rekap BBWS Cimancis 2026)
+const BASE_REKAP_BULANAN = [
+  { bulan: 'Januari', ceklis: 100, surat: 146 },
+  { bulan: 'Februari', ceklis: 62, surat: 171 },
+  { bulan: 'Maret', ceklis: 32, surat: 87 },
+  { bulan: 'April', ceklis: 80, surat: 197 },
+  { bulan: 'Mei', ceklis: 32, surat: 112 },
+  { bulan: 'Juni', ceklis: 63, surat: 141 },
+  { bulan: 'Juli', ceklis: 45, surat: 151 },
+  { bulan: 'Agustus', ceklis: 40, surat: 138 },
+  { bulan: 'September', ceklis: 47, surat: 170 },
+  { bulan: 'Oktober', ceklis: 68, surat: 194 },
+  { bulan: 'November', ceklis: 11, surat: 81 },
+  { bulan: 'Desember', ceklis: 0, surat: 0 }
+];
+
+window.switchAgendaTab = function (tab) {
+  const btnMon = document.getElementById('btnTabRekapBulan');
+  const btnDaf = document.getElementById('btnTabDaftarSurat');
+  const conMon = document.getElementById('agendaContentMonitor');
+  const conDaf = document.getElementById('agendaContentDaftar');
+
+  if (tab === 'monitor') {
+    if (btnMon) { btnMon.className = 'btn-sm btn-primary'; }
+    if (btnDaf) { btnDaf.className = 'btn-sm btn-secondary'; }
+    if (conMon) conMon.style.display = 'block';
+    if (conDaf) conDaf.style.display = 'none';
+    renderMonitorAgendaSurat();
+  } else {
+    if (btnMon) { btnMon.className = 'btn-sm btn-secondary'; }
+    if (btnDaf) { btnDaf.className = 'btn-sm btn-primary'; }
+    if (conMon) conMon.style.display = 'none';
+    if (conDaf) conDaf.style.display = 'block';
+    renderDaftarAgendaSurat();
+  }
+};
+
+window.renderMonitorAgendaSurat = function () {
+  const tbody = document.getElementById('agendaTableBodyBulan');
+  if (!tbody) return;
+
+  // Gabungkan data laporan tamu publik realtime yang masuk ke bulan November 2026
+  const publicReports = Storage.getPublicReports();
+  const additionalNovSurat = publicReports.length;
+  const additionalNovCeklis = publicReports.filter(r => r.status === 'Selesai Ditangani' || (r.replyLetter && r.replyLetter.date)).length;
+
+  let totalCeklis = 0;
+  let totalSurat = 0;
+
+  const rowsHtml = BASE_REKAP_BULANAN.map((item) => {
+    let curCeklis = item.ceklis;
+    let curSurat = item.surat;
+
+    // Tambah realtime dari laporan tamu jika bulan November
+    if (item.bulan === 'November') {
+      curCeklis += additionalNovCeklis;
+      curSurat += additionalNovSurat;
+    }
+
+    const selisih = curSurat - curCeklis;
+    totalCeklis += curCeklis;
+    totalSurat += curSurat;
+
+    const ratio = curSurat > 0 ? ((curCeklis / curSurat) * 100).toFixed(2).replace('.', ',') + '%' : '0,00%';
+
+    const isCurrentMonth = item.bulan === 'November';
+
+    return `
+      <tr style="${isCurrentMonth ? 'background:#EFF6FF; font-weight:700;' : ''}">
+        <td>
+          <div style="font-weight:700; color:#0F294A;">${item.bulan} ${isCurrentMonth ? '<span class="badge-role" style="background:#0F294A; color:#FABE2C; font-size:0.65rem; margin-left:4px;">Live Realtime</span>' : ''}</div>
+        </td>
+        <td style="text-align:center; font-weight:700; color:#059669;">${curCeklis}</td>
+        <td style="text-align:center; font-weight:700; color:#0F294A;">${curSurat}</td>
+        <td style="text-align:center; font-weight:700; color:#DC2626;">${selisih >= 0 ? selisih : 0}</td>
+        <td style="text-align:center; font-weight:700; color:#1E3A8A;">${ratio}</td>
+      </tr>
+    `;
+  }).join('');
+
+  tbody.innerHTML = rowsHtml;
+
+  const totalSelisih = totalSurat - totalCeklis;
+  const grandRatio = totalSurat > 0 ? ((totalCeklis / totalSurat) * 100).toFixed(2).replace('.', ',') : '36,52';
+
+  // Perbarui Kartu Ringkasan Atas
+  const elTotSurat = document.getElementById('agendaTotalSurat');
+  const elTotCeklis = document.getElementById('agendaTotalCeklis');
+  const elTotSelisih = document.getElementById('agendaTotalSelisih');
+  const elIndex = document.getElementById('agendaIndexDisplay');
+
+  if (elTotSurat) elTotSurat.textContent = totalSurat.toLocaleString('id-ID');
+  if (elTotCeklis) elTotCeklis.textContent = totalCeklis.toLocaleString('id-ID');
+  if (elTotSelisih) elTotSelisih.textContent = totalSelisih.toLocaleString('id-ID');
+  if (elIndex) elIndex.textContent = grandRatio + '%';
+
+  // Perbarui Footer Tabel
+  const fCeklis = document.getElementById('footerCeklis');
+  const fSurat = document.getElementById('footerSurat');
+  const fSelisih = document.getElementById('footerSelisih');
+  const fRatio = document.getElementById('footerRatio');
+
+  if (fCeklis) fCeklis.textContent = totalCeklis;
+  if (fSurat) fSurat.textContent = totalSurat;
+  if (fSelisih) fSelisih.textContent = totalSelisih;
+  if (fRatio) fRatio.textContent = grandRatio + '%';
+};
+
+window.renderDaftarAgendaSurat = function () {
+  const tbody = document.getElementById('agendaTableBodyDetail');
+  if (!tbody) return;
+
+  const filterTipe = document.getElementById('filterTipeSuratAgenda') ? document.getElementById('filterTipeSuratAgenda').value : '';
+  const search = document.getElementById('searchSuratAgenda') ? document.getElementById('searchSuratAgenda').value.trim().toLowerCase() : '';
+
+  let list = Storage.getAgendaSurat();
+
+  if (filterTipe) {
+    list = list.filter(item => item.tipe === filterTipe);
+  }
+  if (search) {
+    list = list.filter(item =>
+      item.noSurat.toLowerCase().includes(search) ||
+      item.asalTujuan.toLowerCase().includes(search) ||
+      item.perihal.toLowerCase().includes(search)
+    );
+  }
+
+  const countDisplay = document.getElementById('countDaftarAgendaDisplay');
+  if (countDisplay) countDisplay.textContent = `Menampilkan ${list.length} surat tercatat`;
+
+  if (list.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding:2rem; color:#64748B;">Tidak ada berkas surat agenda yang cocok.</td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = list.map((item, idx) => {
+    const isMasuk = item.tipe === 'Masuk';
+    return `
+      <tr>
+        <td style="text-align:center; font-weight:700; color:#64748B;">${idx + 1}</td>
+        <td>
+          <span class="badge-role" style="${isMasuk ? 'background:#EFF6FF; color:#1D4ED8; border:1px solid #93C5FD;' : 'background:#FEF3C7; color:#92400E; border:1px solid #FCD34D;'} font-weight:700; font-size:0.75rem;">
+            ${isMasuk ? '📥 Surat Masuk' : '📤 Surat Keluar'}
+          </span>
+        </td>
+        <td><strong style="font-family:monospace; color:#0F294A;">${escapeHtml(item.noSurat)}</strong></td>
+        <td><span style="font-size:0.8rem; color:#475569;">${escapeHtml(item.tanggal)}</span></td>
+        <td>
+          <div style="font-weight:700; color:#0F294A;">${escapeHtml(item.asalTujuan)}</div>
+        </td>
+        <td style="max-width:250px;">
+          <div style="font-weight:600; font-size:0.82rem; color:#1E293B;">${escapeHtml(item.perihal)}</div>
+        </td>
+        <td style="text-align:center;">
+          <button type="button" onclick="toggleCeklisAgenda('${escapeHtml(item.id)}')" 
+            class="btn-sm" 
+            style="cursor:pointer; border-radius:4px; font-weight:800; font-size:0.72rem; padding:0.25rem 0.55rem; ${item.ceklis ? 'background:#DCFCE7; color:#166534; border:1px solid #86EFAC;' : 'background:#FEF2F2; color:#991B1B; border:1px solid #FCA5A5;'}"
+            title="Klik untuk mengubah status ceklis/ACC surat">
+            ${item.ceklis ? '✓ Ceklis ACC' : '✕ Pending'}
+          </button>
+        </td>
+        <td style="text-align:center;">
+          <button type="button" onclick="hapusSuratAgenda('${escapeHtml(item.id)}')" 
+            class="btn-opsi btn-hapus" style="font-size:0.7rem; padding:2px 6px;">
+            Hapus
+          </button>
+        </td>
+      </tr>
+    `;
+  }).join('');
+};
+
+window.openModalCatatSuratManual = function () {
+  const modal = document.getElementById('modalCatatSuratAgenda');
+  const tglInput = document.getElementById('agendaTanggalSurat');
+  if (tglInput && !tglInput.value) {
+    const now = new Date();
+    const pad = (n) => String(n).padStart(2, '0');
+    tglInput.value = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
+  }
+  if (modal) modal.classList.add('active');
+};
+
+window.closeModalCatatSuratManual = function () {
+  const modal = document.getElementById('modalCatatSuratAgenda');
+  if (modal) modal.classList.remove('active');
+};
+
+window.handleSaveSuratAgenda = function (e) {
+  e.preventDefault();
+  const tipe = document.getElementById('agendaTipeSurat').value;
+  const tanggal = document.getElementById('agendaTanggalSurat').value;
+  const noSurat = document.getElementById('agendaNomorSurat').value.trim();
+  const asalTujuan = document.getElementById('agendaAsalTujuan').value.trim();
+  const perihal = document.getElementById('agendaPerihal').value.trim();
+  const ceklisEl = document.querySelector('input[name="agendaCeklisRadio"]:checked');
+  const ceklis = ceklisEl ? (ceklisEl.value === 'true') : true;
+
+  if (!noSurat || !asalTujuan || !perihal || !tanggal) {
+    showToast('Validasi', 'Mohon lengkapi seluruh kolom formulir agenda surat.', 'error');
+    return;
+  }
+
+  const d = new Date(tanggal);
+  const bulanNama = NAMA_BULAN_AGENDA[d.getMonth()] || 'November';
+
+  const newItem = {
+    id: 'AGD-' + Date.now().toString().slice(-6),
+    tipe,
+    tanggal,
+    noSurat,
+    asalTujuan,
+    perihal,
+    ceklis,
+    bulan: bulanNama
+  };
+
+  const list = Storage.getAgendaSurat();
+  list.unshift(newItem);
+  Storage.saveAgendaSurat(list);
+
+  showToast('Tercatat di Agenda', `Surat ${noSurat} berhasil disimpan ke Buku Agenda Surat ${tipe}.`, 'success');
+  closeModalCatatSuratManual();
+  document.getElementById('formCatatSuratAgenda').reset();
+  renderDaftarAgendaSurat();
+  renderMonitorAgendaSurat();
+};
+
+window.toggleCeklisAgenda = function (id) {
+  const list = Storage.getAgendaSurat();
+  const idx = list.findIndex(item => item.id === id);
+  if (idx !== -1) {
+    list[idx].ceklis = !list[idx].ceklis;
+    Storage.saveAgendaSurat(list);
+    renderDaftarAgendaSurat();
+    renderMonitorAgendaSurat();
+    showToast('Status Diperbarui', `Status Ceklis surat berhasil diubah menjadi ${list[idx].ceklis ? 'Selesai (ACC)' : 'Pending'}.`, 'info');
+  }
+};
+
+window.hapusSuratAgenda = function (id) {
+  if (confirm('Hapus pencatatan surat ini dari buku agenda?')) {
+    let list = Storage.getAgendaSurat();
+    list = list.filter(item => item.id !== id);
+    Storage.saveAgendaSurat(list);
+    renderDaftarAgendaSurat();
+    renderMonitorAgendaSurat();
+    showToast('Terhapus', 'Catatan agenda surat telah dihapus.', 'info');
+  }
+};
+
+window.exportAgendaSuratCsv = function () {
+  const list = Storage.getAgendaSurat();
+  if (list.length === 0) {
+    showToast('Ekspor Dibatalkan', 'Tidak ada data agenda surat untuk diunduh.', 'error');
+    return;
+  }
+  let csv = '\uFEFF';
+  csv += '"No","Jenis Surat","Nomor Surat","Tanggal","Pengirim / Tujuan","Perihal","Status Ceklis ACC"\r\n';
+  list.forEach((item, idx) => {
+    csv += `"${idx + 1}","${item.tipe}","${item.noSurat}","${item.tanggal}","${item.asalTujuan}","${item.perihal}","${item.ceklis ? 'Sudah Ceklis' : 'Pending'}"\r\n`;
+  });
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `Buku_Agenda_Surat_PU_2026_${formatCurrentDateTime().replace(/[: ]/g, '_')}.csv`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
 };
 
 // Interval Realtime Update: Berjalan tiap 1 detik untuk jam realtime
