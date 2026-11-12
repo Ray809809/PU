@@ -94,6 +94,17 @@ function formatTanggalLengkap(dateStr) {
   }
 }
 
+// Helper hitung default durasi deadline berdasarkan jenis layanan
+function getDefaultSlaDaysByService(serviceType = '') {
+  const s = String(serviceType || '').toLowerCase();
+  if (s.includes('data dan informasi') || s.includes('informasi')) return 7;
+  if (s.includes('pengaduan')) return 3;
+  if (s.includes('aset bmn') || s.includes('bmn')) return 5;
+  if (s.includes('normalisasi') || s.includes('alat berat')) return 7;
+  if (s.includes('umum dan lainnya') || s.includes('umum')) return 1;
+  return 3; // default
+}
+
 // Render Badge Status Deadline di Tabel Admin
 function renderDeadlineBadge(report) {
   const isSelesai = report.status === 'Selesai Ditangani' || (report.replyLetter && report.replyLetter.date);
@@ -101,7 +112,7 @@ function renderDeadlineBadge(report) {
     return `<div style="font-size:0.68rem; color:#059669; font-weight:700; margin-top:2px;">✓ Selesai Tuntas</div>`;
   }
 
-  // Jika deadline belum diset di objek laporan lama, berikan estimasi default 3 hari dari report.date
+  // Jika deadline belum diset di objek laporan lama, hitung berdasarkan SOP jenis layanan spesifik
   let targetDeadline = report.deadline;
   if (!targetDeadline) {
     let baseTime = new Date();
@@ -111,8 +122,9 @@ function renderDeadlineBadge(report) {
         baseTime = parsedDate;
       }
     }
+    const days = getDefaultSlaDaysByService(report.serviceType);
     const d = new Date(baseTime);
-    d.setDate(d.getDate() + 3);
+    d.setDate(d.getDate() + days);
     d.setHours(16, 0, 0, 0);
     const pad = (n) => String(n).padStart(2, '0');
     targetDeadline = `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
@@ -2722,8 +2734,9 @@ window.closeModalDeadline = function () {
   if (modal) modal.classList.remove('active');
 };
 
-window.setDeadlinePreset = function (days) {
+window.setDeadlinePreset = function (days, noteText = '') {
   const inputDate = document.getElementById('inputDeadlineDate');
+  const inputNotes = document.getElementById('inputDeadlineNotes');
   if (!inputDate) return;
   const d = new Date();
   d.setDate(d.getDate() + days);
@@ -2735,6 +2748,9 @@ window.setDeadlinePreset = function (days) {
   }
   const pad = (n) => String(n).padStart(2, '0');
   inputDate.value = `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  if (inputNotes && noteText) {
+    inputNotes.value = noteText;
+  }
 };
 
 window.handleSaveDeadline = function (e) {

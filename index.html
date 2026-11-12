@@ -1800,13 +1800,14 @@
               <div style="font-size:0.78rem; color:#64748B;">Waktu Lapor: <span id="deadlineReportDateDisplay"></span></div>
             </div>
 
-            <!-- Preset Cepat Deadline -->
+            <!-- Preset Cepat Deadline Sesuai SOP Pelayanan PU -->
             <div class="form-field" style="margin-bottom:1rem;">
-              <label class="field-label" style="font-weight:700;">Pilih Preset Cepat Target Deadline</label>
-              <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:0.5rem; margin-top:0.35rem;">
-                <button type="button" class="btn-secondary btn-sm" onclick="setDeadlinePreset(1)" style="font-size:0.75rem; padding:0.4rem;">🚨 24 Jam</button>
-                <button type="button" class="btn-secondary btn-sm" onclick="setDeadlinePreset(3)" style="font-size:0.75rem; padding:0.4rem;">📅 3 Hari</button>
-                <button type="button" class="btn-secondary btn-sm" onclick="setDeadlinePreset(7)" style="font-size:0.75rem; padding:0.4rem;">📆 7 Hari</button>
+              <label class="field-label" style="font-weight:700;">Pilih Preset Cepat Target Deadline SOP</label>
+              <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:0.4rem; margin-top:0.35rem;">
+                <button type="button" class="btn-secondary btn-sm" onclick="setDeadlinePreset(1, 'Layanan Umum (Persetujuan 1 Hari)')" style="font-size:0.75rem; padding:0.4rem;">⚡ 1 Hari</button>
+                <button type="button" class="btn-secondary btn-sm" onclick="setDeadlinePreset(3, 'Layanan Pengaduan (3 Hari)')" style="font-size:0.75rem; padding:0.4rem;">📅 3 Hari</button>
+                <button type="button" class="btn-secondary btn-sm" onclick="setDeadlinePreset(5, 'Layanan Aset BMN (5 Hari)')" style="font-size:0.75rem; padding:0.4rem;">🏛️ 5 Hari</button>
+                <button type="button" class="btn-secondary btn-sm" onclick="setDeadlinePreset(7, 'Permohonan Data / Normalisasi (7 Hari)')" style="font-size:0.75rem; padding:0.4rem;">📆 7 Hari</button>
               </div>
             </div>
 
@@ -2099,7 +2100,7 @@
 
   </div>
 
-  <script src="app.js?v=11.0"></script>
+  <script src="app.js?v=12.0"></script>
 </body>
 
 </html>

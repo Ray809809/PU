@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>PELAYANAN INFORMASI CIMANCIS (PIC) - Portal Pengaduan &amp; Laporan Tamu</title>
-  <link rel="stylesheet" href="style.css?v=5.0">
+  <link rel="stylesheet" href="style.css?v=11.0">
   <link rel="icon"
     href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 fill=%22%230F294A%22 rx=%2210%22/><text y=%2268%22 x=%2250%22 text-anchor=%22middle%22 font-size=%2250%22 font-weight=%22bold%22 fill=%22%23FABE2C%22>PU</text></svg>">
   <style>
@@ -286,6 +286,36 @@
                 style="display:flex; flex-direction:column; gap:0.65rem; margin-top:0.4rem; background:#F8FAFC; padding:0.85rem 1rem; border-radius:8px; border:1px solid #E2E8F0;">
                 <label
                   style="display:flex; align-items:flex-start; gap:0.6rem; font-size:0.92rem; cursor:pointer; color:#334155;">
+                  <input type="radio" name="tamuJenisLayananRadio" value="Layanan Permohonan Data dan Informasi"
+                    style="margin-top:3px; width:18px; height:18px; accent-color:#0F294A;">
+                  <span>Layanan Permohonan Data dan Informasi <strong style="color:#0284C7; font-size:0.8rem;">(SLA: 7 Hari)</strong></span>
+                </label>
+                <label
+                  style="display:flex; align-items:flex-start; gap:0.6rem; font-size:0.92rem; cursor:pointer; color:#334155;">
+                  <input type="radio" name="tamuJenisLayananRadio" value="Layanan Pengaduan"
+                    style="margin-top:3px; width:18px; height:18px; accent-color:#0F294A;">
+                  <span>Layanan Pengaduan <strong style="color:#059669; font-size:0.8rem;">(SLA: 3 Hari)</strong></span>
+                </label>
+                <label
+                  style="display:flex; align-items:flex-start; gap:0.6rem; font-size:0.92rem; cursor:pointer; color:#334155;">
+                  <input type="radio" name="tamuJenisLayananRadio" value="Layanan Penegasan Aset BMN"
+                    style="margin-top:3px; width:18px; height:18px; accent-color:#0F294A;">
+                  <span>Layanan Penegasan Aset BMN <strong style="color:#D97706; font-size:0.8rem;">(SLA: 5 Hari)</strong></span>
+                </label>
+                <label
+                  style="display:flex; align-items:flex-start; gap:0.6rem; font-size:0.92rem; cursor:pointer; color:#334155;">
+                  <input type="radio" name="tamuJenisLayananRadio" value="Layanan Permohonan Normalisasi/Bantuan Alat Berat"
+                    style="margin-top:3px; width:18px; height:18px; accent-color:#0F294A;">
+                  <span>Layanan Permohonan Normalisasi/Bantuan Alat Berat <strong style="color:#0284C7; font-size:0.8rem;">(SLA: 7 Hari)</strong></span>
+                </label>
+                <label
+                  style="display:flex; align-items:flex-start; gap:0.6rem; font-size:0.92rem; cursor:pointer; color:#334155;">
+                  <input type="radio" name="tamuJenisLayananRadio" value="Layanan Umum dan Lainnya"
+                    style="margin-top:3px; width:18px; height:18px; accent-color:#0F294A;">
+                  <span>Layanan Umum dan Lainnya <strong style="color:#DC2626; font-size:0.8rem;">(SLA: Persetujuan 1 Hari)</strong></span>
+                </label>
+                <label
+                  style="display:flex; align-items:flex-start; gap:0.6rem; font-size:0.92rem; cursor:pointer; color:#334155;">
                   <input type="radio" name="tamuJenisLayananRadio" value="Layanan Rekomendasi Teknis dan Perizinan"
                     style="margin-top:3px; width:18px; height:18px; accent-color:#0F294A;">
                   <span>Layanan Rekomendasi Teknis dan Perizinan</span>
@@ -295,30 +325,6 @@
                   <input type="radio" name="tamuJenisLayananRadio" value="Layanan Penanggulangan Banjir dan Bencana"
                     style="margin-top:3px; width:18px; height:18px; accent-color:#0F294A;">
                   <span>Layanan Penanggulangan Banjir dan Bencana</span>
-                </label>
-                <label
-                  style="display:flex; align-items:flex-start; gap:0.6rem; font-size:0.92rem; cursor:pointer; color:#334155;">
-                  <input type="radio" name="tamuJenisLayananRadio" value="Layanan Pengaduan"
-                    style="margin-top:3px; width:18px; height:18px; accent-color:#0F294A;">
-                  <span>Layanan Pengaduan</span>
-                </label>
-                <label
-                  style="display:flex; align-items:flex-start; gap:0.6rem; font-size:0.92rem; cursor:pointer; color:#334155;">
-                  <input type="radio" name="tamuJenisLayananRadio" value="Layanan Penegasan Aset BMN"
-                    style="margin-top:3px; width:18px; height:18px; accent-color:#0F294A;">
-                  <span>Layanan Penegasan Aset BMN</span>
-                </label>
-                <label
-                  style="display:flex; align-items:flex-start; gap:0.6rem; font-size:0.92rem; cursor:pointer; color:#334155;">
-                  <input type="radio" name="tamuJenisLayananRadio" value="Layanan Permohonan Data dan Informasi"
-                    style="margin-top:3px; width:18px; height:18px; accent-color:#0F294A;">
-                  <span>Layanan Permohonan Data dan Informasi</span>
-                </label>
-                <label
-                  style="display:flex; align-items:flex-start; gap:0.6rem; font-size:0.92rem; cursor:pointer; color:#334155;">
-                  <input type="radio" name="tamuJenisLayananRadio" value="Layanan Umum dan Lainnya"
-                    style="margin-top:3px; width:18px; height:18px; accent-color:#0F294A;">
-                  <span>Layanan Umum dan Lainnya</span>
                 </label>
               </div>
             </div>
@@ -665,7 +671,7 @@
     </footer>
   </div>
 
-  <script src="app.js?v=9.0"></script>
+  <script src="app.js?v=12.0"></script>
   <script>
     // Live Clock Realtime di Header Portal Tamu (Format: Hari, DD MMMM YYYY • HH:mm:ss WIB)
     function updateTamuClock() {
@@ -1295,15 +1301,36 @@
         letterData: letterData,
         surveyConsent: true,
         status: 'Menunggu Verifikasi Dinas',
-        // Otomatis tentukan default deadline SLA (3 hari kerja dari tanggal lapor)
+        // Otomatis tentukan default deadline SLA berdasarkan jenis layanan spesifik
         deadline: (function () {
           const d = new Date();
-          d.setDate(d.getDate() + 3);
+          let days = 3; // default
+          const s = (jenisLayanan || '').toLowerCase();
+          if (s.includes('data dan informasi') || s.includes('informasi')) {
+            days = 7;
+          } else if (s.includes('pengaduan')) {
+            days = 3;
+          } else if (s.includes('aset bmn') || s.includes('bmn')) {
+            days = 5;
+          } else if (s.includes('normalisasi') || s.includes('alat berat')) {
+            days = 7;
+          } else if (s.includes('umum dan lainnya') || s.includes('umum')) {
+            days = 1;
+          }
+          d.setDate(d.getDate() + days);
           d.setHours(16, 0, 0, 0);
           const pad = (n) => String(n).padStart(2, '0');
           return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
         })(),
-        deadlineNotes: 'Standar SOP Penanganan 3 Hari Kerja',
+        deadlineNotes: (function () {
+          const s = (jenisLayanan || '').toLowerCase();
+          if (s.includes('data dan informasi')) return 'SOP SLA: 7 Hari';
+          if (s.includes('pengaduan')) return 'SOP SLA: 3 Hari';
+          if (s.includes('aset bmn')) return 'SOP SLA: 5 Hari';
+          if (s.includes('normalisasi') || s.includes('alat berat')) return 'SOP SLA: 7 Hari';
+          if (s.includes('umum')) return 'SOP SLA: Persetujuan 1 Hari';
+          return 'SOP SLA Standar PU';
+        })(),
         replyLetter: null
       };
 
