@@ -525,15 +525,8 @@ const Storage = {
   getAgendaSurat() {
     const data = localStorage.getItem('pu_agenda_surat_2026');
     if (!data) {
-      // Data Seed Awal Persis Screenshot Google Spreadsheet Buku Agenda Surat Masuk 2026 BBWS Cimancis
-      const defaultAgenda = [
-        { id: 'AGD-101', tipe: 'Masuk', noSurat: '005/PU-BM/I/2026', tanggal: '2026-01-15', asalTujuan: 'Dinas Bina Marga Prov', perihal: 'Koordinasi Penanganan Jalan Nasional', ceklis: true, bulan: 'Januari' },
-        { id: 'AGD-102', tipe: 'Keluar', noSurat: '800/PU-SKR/II/2026', tanggal: '2026-02-10', asalTujuan: 'Bupati Cirebon', perihal: 'Penyampaian Hasil Rekomtek Sungai', ceklis: true, bulan: 'Februari' },
-        { id: 'AGD-103', tipe: 'Masuk', noSurat: '120/PT-MTR/XI/2026', tanggal: '2026-11-05', asalTujuan: 'PT. Mitra Sentosa Beton', perihal: 'Permohonan Rekomtek Sempadan Irigasi', ceklis: true, bulan: 'November' },
-        { id: 'AGD-104', tipe: 'Masuk', noSurat: '450/DESA-KUTO/XI/2026', tanggal: '2026-11-11', asalTujuan: 'Kepala Desa Sukamaju', perihal: 'Normalisasi Tanggul Kali Cisanggarung', ceklis: false, bulan: 'November' }
-      ];
-      localStorage.setItem('pu_agenda_surat_2026', JSON.stringify(defaultAgenda));
-      return defaultAgenda;
+      localStorage.setItem('pu_agenda_surat_2026', JSON.stringify([]));
+      return [];
     }
     try {
       const parsed = JSON.parse(data);
