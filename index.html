@@ -1486,7 +1486,8 @@
             <!-- HALAMAN BARU: BUKU AGENDA SURAT MASUK & KELUAR REALTIME -->
             <div class="tab-page-content" id="pageAgendaSurat">
               <div class="panel-table">
-                <div class="panel-title" style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:1rem;">
+                <div class="panel-title"
+                  style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:1rem;">
                   <div>
                     <h2 style="display:flex; align-items:center; gap:0.5rem;">
                       <span>📑</span> BUKU AGENDA SURAT MASUK &amp; SURAT KELUAR 2026
@@ -1494,7 +1495,8 @@
                     <p>Monitoring rekapitulasi jumlah surat, persetujuan (ceklis), dan surat keluar secara realtime.</p>
                   </div>
                   <div style="display:flex; gap:0.5rem; align-items:center; flex-wrap:wrap;">
-                    <button type="button" class="btn-primary btn-sm" onclick="openModalCatatSuratManual()" style="background:#0F294A; border-color:#0F294A;">
+                    <button type="button" class="btn-primary btn-sm" onclick="openModalCatatSuratManual()"
+                      style="background:#0F294A; border-color:#0F294A;">
                       + Catat Surat Agenda
                     </button>
                     <button type="button" class="btn-secondary btn-sm" onclick="exportAgendaSuratCsv()">
@@ -1504,11 +1506,14 @@
                 </div>
 
                 <!-- Sub-tab Navigasi Buku Agenda -->
-                <div style="display:flex; gap:0.5rem; margin:1rem 0; border-bottom:2px solid #E2E8F0; padding-bottom:0.5rem;">
-                  <button type="button" class="btn-sm btn-primary" id="btnTabRekapBulan" onclick="switchAgendaTab('monitor')" style="font-weight:700;">
+                <div
+                  style="display:flex; gap:0.5rem; margin:1rem 0; border-bottom:2px solid #E2E8F0; padding-bottom:0.5rem;">
+                  <button type="button" class="btn-sm btn-primary" id="btnTabRekapBulan"
+                    onclick="switchAgendaTab('monitor')" style="font-weight:700;">
                     📊 Monitor &amp; Rekapitulasi Bulanan
                   </button>
-                  <button type="button" class="btn-sm btn-secondary" id="btnTabDaftarSurat" onclick="switchAgendaTab('daftar')" style="font-weight:700;">
+                  <button type="button" class="btn-sm btn-secondary" id="btnTabDaftarSurat"
+                    onclick="switchAgendaTab('daftar')" style="font-weight:700;">
                     📋 Rincian Buku Agenda Surat Masuk &amp; Keluar
                   </button>
                 </div>
@@ -1516,26 +1521,40 @@
                 <!-- KONTEN 1: MONITOR & REKAPITULASI PERSIS SHEET EXCEL SCREENSHOT -->
                 <div id="agendaContentMonitor">
                   <!-- Highlight Persentase Realtime Persis Screenshot 36,52 -->
-                  <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:1rem; margin-bottom:1.25rem;">
-                    <div style="background:#EFF6FF; border:2px solid #3B82F6; border-radius:10px; padding:1.25rem; text-align:center;">
-                      <div style="font-size:0.8rem; font-weight:800; color:#1E3A8A; text-transform:uppercase;">TOTAL SURAT MASUK 2026</div>
-                      <div style="font-size:2rem; font-weight:900; color:#0F294A; margin-top:0.35rem;" id="agendaTotalSurat">1,588</div>
+                  <div
+                    style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:1rem; margin-bottom:1.25rem;">
+                    <div
+                      style="background:#EFF6FF; border:2px solid #3B82F6; border-radius:10px; padding:1.25rem; text-align:center;">
+                      <div style="font-size:0.8rem; font-weight:800; color:#1E3A8A; text-transform:uppercase;">TOTAL
+                        SURAT MASUK 2026</div>
+                      <div style="font-size:2rem; font-weight:900; color:#0F294A; margin-top:0.35rem;"
+                        id="agendaTotalSurat">1,588</div>
                       <div style="font-size:0.75rem; color:#475569;">Akumulasi seluruh surat tercatat</div>
                     </div>
-                    <div style="background:#F0FDF4; border:2px solid #10B981; border-radius:10px; padding:1.25rem; text-align:center;">
-                      <div style="font-size:0.8rem; font-weight:800; color:#166534; text-transform:uppercase;">JUMLAH CEKLIS / DISETUJUI</div>
-                      <div style="font-size:2rem; font-weight:900; color:#059669; margin-top:0.35rem;" id="agendaTotalCeklis">580</div>
+                    <div
+                      style="background:#F0FDF4; border:2px solid #10B981; border-radius:10px; padding:1.25rem; text-align:center;">
+                      <div style="font-size:0.8rem; font-weight:800; color:#166534; text-transform:uppercase;">JUMLAH
+                        CEKLIS / DISETUJUI</div>
+                      <div style="font-size:2rem; font-weight:900; color:#059669; margin-top:0.35rem;"
+                        id="agendaTotalCeklis">580</div>
                       <div style="font-size:0.75rem; color:#14532D;">Surat selesai tindak lanjut / ACC</div>
                     </div>
-                    <div style="background:#FFFBEB; border:2px solid #F59E0B; border-radius:10px; padding:1.25rem; text-align:center;">
-                      <div style="font-size:0.8rem; font-weight:800; color:#92400E; text-transform:uppercase;">SELISIH / PENDING</div>
-                      <div style="font-size:2rem; font-weight:900; color:#D97706; margin-top:0.35rem;" id="agendaTotalSelisih">1,008</div>
+                    <div
+                      style="background:#FFFBEB; border:2px solid #F59E0B; border-radius:10px; padding:1.25rem; text-align:center;">
+                      <div style="font-size:0.8rem; font-weight:800; color:#92400E; text-transform:uppercase;">SELISIH /
+                        PENDING</div>
+                      <div style="font-size:2rem; font-weight:900; color:#D97706; margin-top:0.35rem;"
+                        id="agendaTotalSelisih">1,008</div>
                       <div style="font-size:0.75rem; color:#78350F;">Dalam proses penanganan</div>
                     </div>
-                    <div style="background:#FEF2F2; border:2px solid #EF4444; border-radius:10px; padding:1.25rem; text-align:center;">
-                      <div style="font-size:0.8rem; font-weight:800; color:#991B1B; text-transform:uppercase;">RASIO PENYELESAIAN (INDEX)</div>
-                      <div style="font-size:2.4rem; font-weight:900; color:#DC2626; margin-top:0.2rem;" id="agendaIndexDisplay">36,52%</div>
-                      <div style="font-size:0.72rem; color:#B91C1C; font-weight:700;">(Jumlah Ceklis / Jumlah Surat)</div>
+                    <div
+                      style="background:#FEF2F2; border:2px solid #EF4444; border-radius:10px; padding:1.25rem; text-align:center;">
+                      <div style="font-size:0.8rem; font-weight:800; color:#991B1B; text-transform:uppercase;">RASIO
+                        PENYELESAIAN (INDEX)</div>
+                      <div style="font-size:2.4rem; font-weight:900; color:#DC2626; margin-top:0.2rem;"
+                        id="agendaIndexDisplay">36,52%</div>
+                      <div style="font-size:0.72rem; color:#B91C1C; font-weight:700;">(Jumlah Ceklis / Jumlah Surat)
+                      </div>
                     </div>
                   </div>
 
@@ -1569,14 +1588,18 @@
 
                 <!-- KONTEN 2: RINCIAN BUKU AGENDA SURAT REALTIME -->
                 <div id="agendaContentDaftar" style="display:none;">
-                  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem; flex-wrap:wrap; gap:0.5rem;">
+                  <div
+                    style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem; flex-wrap:wrap; gap:0.5rem;">
                     <div style="display:flex; gap:0.5rem;">
-                      <select id="filterTipeSuratAgenda" class="form-control" onchange="renderDaftarAgendaSurat()" style="width:160px;">
+                      <select id="filterTipeSuratAgenda" class="form-control" onchange="renderDaftarAgendaSurat()"
+                        style="width:160px;">
                         <option value="">Semua Surat</option>
                         <option value="Masuk">Surat Masuk</option>
                         <option value="Keluar">Surat Keluar</option>
                       </select>
-                      <input type="text" id="searchSuratAgenda" class="form-control" placeholder="Cari No. Surat / Pengirim..." oninput="renderDaftarAgendaSurat()" style="width:240px;">
+                      <input type="text" id="searchSuratAgenda" class="form-control"
+                        placeholder="Cari No. Surat / Pengirim..." oninput="renderDaftarAgendaSurat()"
+                        style="width:240px;">
                     </div>
                     <span style="font-size:0.8rem; color:#64748B;" id="countDaftarAgendaDisplay">Memuat data...</span>
                   </div>
@@ -1783,31 +1806,45 @@
     <div class="modal-overlay" id="modalSetDeadline" role="dialog" aria-modal="true" aria-labelledby="titleSetDeadline">
       <div class="modal-box" style="max-width: 480px;">
         <div class="modal-header-bar" style="background:#0F294A; color:#fff;">
-          <h3 id="titleSetDeadline" style="color:#fff; font-size:1.05rem; display:flex; align-items:center; gap:0.5rem;">
+          <h3 id="titleSetDeadline"
+            style="color:#fff; font-size:1.05rem; display:flex; align-items:center; gap:0.5rem;">
             <span>⏱️</span> Atur Deadline &amp; Target Waktu Laporan
           </h3>
-          <button type="button" class="btn-modal-close" onclick="closeModalDeadline()" aria-label="Tutup" style="color:#fff;">&times;</button>
+          <button type="button" class="btn-modal-close" onclick="closeModalDeadline()" aria-label="Tutup"
+            style="color:#fff;">&times;</button>
         </div>
 
         <form id="formSetDeadline" onsubmit="handleSaveDeadline(event)">
           <div class="modal-content-body" style="padding:1.25rem;">
             <input type="hidden" id="deadlineTicket">
 
-            <div style="background:#EFF6FF; border:1px solid #BFDBFE; border-radius:8px; padding:0.85rem; margin-bottom:1rem;">
+            <div
+              style="background:#EFF6FF; border:1px solid #BFDBFE; border-radius:8px; padding:0.85rem; margin-bottom:1rem;">
               <div style="font-size:0.75rem; color:#1E3A8A; font-weight:800; text-transform:uppercase;">No. Tiket:</div>
-              <div style="font-size:1.2rem; font-weight:900; color:#0F294A; font-family:monospace;" id="deadlineTicketDisplay"></div>
-              <div style="font-size:0.8rem; color:#475569; margin-top:2px;">Pelapor: <strong id="deadlineReporterDisplay"></strong></div>
-              <div style="font-size:0.78rem; color:#64748B;">Waktu Lapor: <span id="deadlineReportDateDisplay"></span></div>
+              <div style="font-size:1.2rem; font-weight:900; color:#0F294A; font-family:monospace;"
+                id="deadlineTicketDisplay"></div>
+              <div style="font-size:0.8rem; color:#475569; margin-top:2px;">Pelapor: <strong
+                  id="deadlineReporterDisplay"></strong></div>
+              <div style="font-size:0.78rem; color:#64748B;">Waktu Lapor: <span id="deadlineReportDateDisplay"></span>
+              </div>
             </div>
 
             <!-- Preset Cepat Deadline Sesuai SOP Pelayanan PU -->
             <div class="form-field" style="margin-bottom:1rem;">
               <label class="field-label" style="font-weight:700;">Pilih Preset Cepat Target Deadline SOP</label>
               <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:0.4rem; margin-top:0.35rem;">
-                <button type="button" class="btn-secondary btn-sm" onclick="setDeadlinePreset(1, 'Layanan Umum (Persetujuan 1 Hari)')" style="font-size:0.75rem; padding:0.4rem;">⚡ 1 Hari</button>
-                <button type="button" class="btn-secondary btn-sm" onclick="setDeadlinePreset(3, 'Layanan Pengaduan (3 Hari)')" style="font-size:0.75rem; padding:0.4rem;">📅 3 Hari</button>
-                <button type="button" class="btn-secondary btn-sm" onclick="setDeadlinePreset(5, 'Layanan Aset BMN (5 Hari)')" style="font-size:0.75rem; padding:0.4rem;">🏛️ 5 Hari</button>
-                <button type="button" class="btn-secondary btn-sm" onclick="setDeadlinePreset(7, 'Permohonan Data / Normalisasi (7 Hari)')" style="font-size:0.75rem; padding:0.4rem;">📆 7 Hari</button>
+                <button type="button" class="btn-secondary btn-sm"
+                  onclick="setDeadlinePreset(1, 'Layanan Umum (Persetujuan 1 Hari)')"
+                  style="font-size:0.75rem; padding:0.4rem;">⚡ 1 Hari</button>
+                <button type="button" class="btn-secondary btn-sm"
+                  onclick="setDeadlinePreset(3, 'Layanan Pengaduan (3 Hari)')"
+                  style="font-size:0.75rem; padding:0.4rem;">📅 3 Hari</button>
+                <button type="button" class="btn-secondary btn-sm"
+                  onclick="setDeadlinePreset(5, 'Layanan Aset BMN (5 Hari)')"
+                  style="font-size:0.75rem; padding:0.4rem;">🏛️ 5 Hari</button>
+                <button type="button" class="btn-secondary btn-sm"
+                  onclick="setDeadlinePreset(7, 'Permohonan Data / Normalisasi (7 Hari)')"
+                  style="font-size:0.75rem; padding:0.4rem;">📆 7 Hari</button>
               </div>
             </div>
 
@@ -1816,7 +1853,8 @@
               <label class="field-label" for="inputDeadlineDate" style="font-weight:700; color:#0F294A;">
                 Target Tanggal &amp; Jam Batas Waktu (Deadline) <span style="color:#DC2626;">*</span>
               </label>
-              <input type="datetime-local" id="inputDeadlineDate" class="form-control" required style="font-size:0.95rem; font-weight:700; padding:0.6rem;">
+              <input type="datetime-local" id="inputDeadlineDate" class="form-control" required
+                style="font-size:0.95rem; font-weight:700; padding:0.6rem;">
               <span style="font-size:0.72rem; color:#64748B; margin-top:0.25rem; display:block;">
                 Pilih tanggal dan jam batas akhir penyelesaian laporan oleh tim/bidang dinas.
               </span>
@@ -1824,14 +1862,17 @@
 
             <!-- Catatan SLA / Prioritas -->
             <div class="form-field">
-              <label class="field-label" for="inputDeadlineNotes" style="font-weight:700;">Catatan / Tingkat Prioritas Target</label>
-              <input type="text" id="inputDeadlineNotes" class="form-control" placeholder="Contoh: Sangat Mendesak / Penanganan Darurat Longsor" style="font-size:0.85rem;">
+              <label class="field-label" for="inputDeadlineNotes" style="font-weight:700;">Catatan / Tingkat Prioritas
+                Target</label>
+              <input type="text" id="inputDeadlineNotes" class="form-control"
+                placeholder="Contoh: Sangat Mendesak / Penanganan Darurat Longsor" style="font-size:0.85rem;">
             </div>
           </div>
 
           <div class="modal-footer-bar">
             <button type="button" class="btn-secondary btn-sm" onclick="closeModalDeadline()">Batal</button>
-            <button type="submit" class="btn-primary btn-sm" style="background:#0F294A; border-color:#0F294A; font-weight:700; width:auto;">
+            <button type="submit" class="btn-primary btn-sm"
+              style="background:#0F294A; border-color:#0F294A; font-weight:700; width:auto;">
               💾 Simpan Batas Waktu
             </button>
           </div>
@@ -1840,55 +1881,68 @@
     </div>
 
     <!-- Modal Catat Surat Agenda Manual (Surat Masuk / Keluar) -->
-    <div class="modal-overlay" id="modalCatatSuratAgenda" role="dialog" aria-modal="true" aria-labelledby="titleCatatAgenda">
+    <div class="modal-overlay" id="modalCatatSuratAgenda" role="dialog" aria-modal="true"
+      aria-labelledby="titleCatatAgenda">
       <div class="modal-box" style="max-width: 540px;">
         <div class="modal-header-bar" style="background:#0F294A; color:#fff;">
-          <h3 id="titleCatatAgenda" style="color:#fff; font-size:1.05rem; display:flex; align-items:center; gap:0.5rem;">
+          <h3 id="titleCatatAgenda"
+            style="color:#fff; font-size:1.05rem; display:flex; align-items:center; gap:0.5rem;">
             <span>📝</span> Catat Agenda Surat Masuk &amp; Keluar
           </h3>
-          <button type="button" class="btn-modal-close" onclick="closeModalCatatSuratManual()" aria-label="Tutup" style="color:#fff;">&times;</button>
+          <button type="button" class="btn-modal-close" onclick="closeModalCatatSuratManual()" aria-label="Tutup"
+            style="color:#fff;">&times;</button>
         </div>
 
         <form id="formCatatSuratAgenda" onsubmit="handleSaveSuratAgenda(event)">
           <div class="modal-content-body" style="padding:1.25rem;">
             <div class="form-row-2">
               <div class="form-field">
-                <label class="field-label" for="agendaTipeSurat">Jenis Surat <span style="color:#DC2626;">*</span></label>
+                <label class="field-label" for="agendaTipeSurat">Jenis Surat <span
+                    style="color:#DC2626;">*</span></label>
                 <select id="agendaTipeSurat" class="form-control" required style="font-weight:700;">
                   <option value="Masuk">📥 Surat Masuk</option>
                   <option value="Keluar">📤 Surat Keluar</option>
                 </select>
               </div>
               <div class="form-field">
-                <label class="field-label" for="agendaTanggalSurat">Tanggal Surat <span style="color:#DC2626;">*</span></label>
+                <label class="field-label" for="agendaTanggalSurat">Tanggal Surat <span
+                    style="color:#DC2626;">*</span></label>
                 <input type="date" id="agendaTanggalSurat" class="form-control" required>
               </div>
             </div>
 
             <div class="form-row-2" style="margin-top:0.75rem;">
               <div class="form-field">
-                <label class="field-label" for="agendaNomorSurat">Nomor Surat Dinas <span style="color:#DC2626;">*</span></label>
-                <input type="text" id="agendaNomorSurat" class="form-control" placeholder="Contoh: 005/PU-BBWS/2026" required style="font-family:monospace; font-weight:700;">
+                <label class="field-label" for="agendaNomorSurat">Nomor Surat Dinas <span
+                    style="color:#DC2626;">*</span></label>
+                <input type="text" id="agendaNomorSurat" class="form-control" placeholder="Contoh: 005/PU-BBWS/2026"
+                  required style="font-family:monospace; font-weight:700;">
               </div>
               <div class="form-field">
-                <label class="field-label" for="agendaAsalTujuan">Pengirim / Tujuan <span style="color:#DC2626;">*</span></label>
-                <input type="text" id="agendaAsalTujuan" class="form-control" placeholder="Instansi / Pejabat / Perusahaan" required>
+                <label class="field-label" for="agendaAsalTujuan">Pengirim / Tujuan <span
+                    style="color:#DC2626;">*</span></label>
+                <input type="text" id="agendaAsalTujuan" class="form-control"
+                  placeholder="Instansi / Pejabat / Perusahaan" required>
               </div>
             </div>
 
             <div class="form-field" style="margin-top:0.75rem;">
               <label class="field-label" for="agendaPerihal">Perihal Surat <span style="color:#DC2626;">*</span></label>
-              <input type="text" id="agendaPerihal" class="form-control" placeholder="Contoh: Permohonan Rekomtek Pemanfaatan Sempadan" required>
+              <input type="text" id="agendaPerihal" class="form-control"
+                placeholder="Contoh: Permohonan Rekomtek Pemanfaatan Sempadan" required>
             </div>
 
             <div class="form-field" style="margin-top:0.75rem;">
               <label class="field-label" style="font-weight:700;">Status Ceklis / ACC</label>
-              <div style="display:flex; gap:1.25rem; background:#F8FAFC; padding:0.6rem 0.85rem; border-radius:6px; border:1px solid #E2E8F0; margin-top:0.35rem;">
-                <label style="display:inline-flex; align-items:center; gap:0.4rem; font-size:0.85rem; cursor:pointer; color:#166534; font-weight:700;">
+              <div
+                style="display:flex; gap:1.25rem; background:#F8FAFC; padding:0.6rem 0.85rem; border-radius:6px; border:1px solid #E2E8F0; margin-top:0.35rem;">
+                <label
+                  style="display:inline-flex; align-items:center; gap:0.4rem; font-size:0.85rem; cursor:pointer; color:#166534; font-weight:700;">
                   <input type="radio" name="agendaCeklisRadio" value="true" checked style="accent-color:#059669;">
                   <span>✓ Sudah Ceklis (ACC)</span>
                 </label>
-                <label style="display:inline-flex; align-items:center; gap:0.4rem; font-size:0.85rem; cursor:pointer; color:#64748B; font-weight:600;">
+                <label
+                  style="display:inline-flex; align-items:center; gap:0.4rem; font-size:0.85rem; cursor:pointer; color:#64748B; font-weight:600;">
                   <input type="radio" name="agendaCeklisRadio" value="false" style="accent-color:#059669;">
                   <span>Belum Ceklis (Pending)</span>
                 </label>
@@ -1898,7 +1952,8 @@
 
           <div class="modal-footer-bar">
             <button type="button" class="btn-secondary btn-sm" onclick="closeModalCatatSuratManual()">Batal</button>
-            <button type="submit" class="btn-primary btn-sm" style="background:#0F294A; border-color:#0F294A; font-weight:700; width:auto;">
+            <button type="submit" class="btn-primary btn-sm"
+              style="background:#0F294A; border-color:#0F294A; font-weight:700; width:auto;">
               💾 Simpan ke Buku Agenda
             </button>
           </div>
@@ -1968,15 +2023,12 @@
               <label class="field-label" for="lupaUnit" style="font-weight:700;">Unit Kerja / Direktorat <span
                   style="color:#DC2626;">*</span></label>
               <select id="lupaUnit" class="form-control" required>
-                <option value="">-- Pilih Unit Kerja Anda --</option>
-                <option value="Ditjen Bina Marga">Ditjen Bina Marga</option>
-                <option value="Ditjen Sumber Daya Air">Ditjen Sumber Daya Air</option>
-                <option value="Ditjen Cipta Karya">Ditjen Cipta Karya</option>
-                <option value="Ditjen Perumahan">Ditjen Perumahan</option>
-                <option value="Ditjen Bina Konstruksi">Ditjen Bina Konstruksi</option>
-                <option value="Ditjen Pembiayaan Infrastruktur">Ditjen Pembiayaan Infrastruktur</option>
-                <option value="Sekretariat Jenderal">Sekretariat Jenderal</option>
-                <option value="Inspektorat Jenderal">Inspektorat Jenderal</option>
+                <option value="">-- Pilih Unit Kerja / Bidang Anda --</option>
+                <option value="Bagian TU">Bagian TU</option>
+                <option value="Bidang OP">Bidang OP</option>
+                <option value="Bidang KPI">Bidang KPI</option>
+                <option value="Bidang PJSA">Bidang PJSA</option>
+                <option value="Bidang PJPA">Bidang PJPA</option>
                 <option value="Sekretariat / Sakres">Sekretariat / Sakres</option>
               </select>
             </div>

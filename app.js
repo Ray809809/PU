@@ -204,13 +204,13 @@ function normalizeReport(r) {
   };
 }
 
-// Daftar 5 Bidang Teknis Utama PU Pekerjaan Umum
+// Daftar 5 Bidang Disposisi Resmi (BBWS / Lingkungan PU)
 const DAFTAR_UNIT_PU = [
-  'Ditjen Bina Marga',
-  'Ditjen Sumber Daya Air',
-  'Ditjen Cipta Karya',
-  'Ditjen Perumahan',
-  'Ditjen Bina Konstruksi'
+  'Bagian TU',
+  'Bidang OP',
+  'Bidang KPI',
+  'Bidang PJSA',
+  'Bidang PJPA'
 ];
 
 // Data Awal Pegawai PU (3 Peran: Super Admin, Bidang, Sakres)
@@ -721,19 +721,13 @@ const elements = {
   btnClearAudit: document.getElementById('btnClearAudit')
 };
 
-// Deskripsi 11 Unit Kerja Resmi PU Pekerjaan Umum
+// Deskripsi 5 Bidang Disposisi Resmi
 const UNIT_DETAILS = {
-  'Ditjen Bina Marga': 'Penyelenggaraan jalan nasional, jembatan strategis, dan konektivitas transportasi darat nasional.',
-  'Ditjen Sumber Daya Air': 'Pengelolaan bendungan, irigasi lumbung pangan, pengendalian banjir, dan ketahanan air.',
-  'Ditjen Cipta Karya': 'Pengembangan kawasan permukiman, air minum SPAM, sanitasi, dan tata bangunan negara.',
-  'Ditjen Perumahan': 'Penyediaan rumah susun, rumah khusus, bantuan stimulan swadaya (BSPS), dan perumahan rakyat.',
-  'Ditjen Bina Konstruksi': 'Pembinaan industri jasa konstruksi, sertifikasi tenaga ahli, dan rantai pasok material.',
-  'Ditjen Pembiayaan Infrastruktur': 'Pengembangan investasi infrastruktur PU dan perumahan melalui skema KPBU.',
-  'Sekretariat Jenderal': 'Koordinasi tugas, pembinaan administrasi, hukum, kepegawaian, organisasi, dan humas.',
-  'Inspektorat Jenderal': 'Pengawasan intern, audit tata kelola pemerintahan yang bersih (WBK/WBBM), dan kepatuhan.',
-  'Badan Pengembangan SDM (BPSDM)': 'Pendidikan, pelatihan, dan pengembangan kompetensi aparatur sipil negara PU.',
-  'Balai Besar Pelaksanaan Jalan Nasional (BBPJN)': 'Unit pelaksana teknis preservasi dan pembangunan jalan & jembatan di wilayah Indonesia.',
-  'Balai Wilayah Sungai (BWS)': 'Unit pelaksana teknis konservasi dan pendayagunaan air di wilayah sungai/DAS.'
+  'Bagian TU': 'Bagian Tata Usaha - Administrasi umum, persuratan dinas, dan ketatausahaan pimpinan.',
+  'Bidang OP': 'Bidang Operasi dan Pemeliharaan - Penanganan operasional sarana prasarana dan pemeliharaan rutin.',
+  'Bidang KPI': 'Bidang Keterpaduan Pembangunan Infrastruktur - Perencanaan program dan pemantauan evaluasi pembangunan.',
+  'Bidang PJSA': 'Bidang Pelaksanaan Jaringan Sumber Air - Konstruksi pengendalian banjir, pantai, sungai, dan danau.',
+  'Bidang PJPA': 'Bidang Pelaksanaan Jaringan Pemanfaatan Air - Konstruksi jaringan irigasi, bendungan, dan air baku.'
 };
 
 // Inline Alert Helper
@@ -2400,28 +2394,25 @@ function handlePublicReportSubmit(e) {
   showToast('Permohonan Terkirim', `Laporan Anda berhasil dicatat dengan No. Tiket ${ticket} dan telah diteruskan ke Staf & Admin PU.`, 'success');
 }
 
-// Penentuan Unit Otomatis (Smart Dispatch ke Staf/Admin terkait)
+// Penentuan Unit Disposisi Otomatis (Smart Dispatch ke Bidang Terkait)
 function getAutoAssignedUnit(serviceType, subject, desc) {
   const text = (serviceType + ' ' + subject + ' ' + desc).toLowerCase();
-  if (text.includes('jalan') || text.includes('jembatan') || text.includes('lubang') || text.includes('aspal') || text.includes('pantura') || text.includes('tol')) {
-    return 'Ditjen Bina Marga';
+  if (text.includes('tu') || text.includes('administrasi') || text.includes('surat') || text.includes('data') || text.includes('informasi')) {
+    return 'Bagian TU';
   }
-  if (text.includes('banjir') || text.includes('sungai') || text.includes('irigasi') || text.includes('tanggul') || text.includes('bendungan') || text.includes('danau')) {
-    return 'Ditjen Sumber Daya Air';
+  if (text.includes('op') || text.includes('operasi') || text.includes('pemeliharaan') || text.includes('rusak') || text.includes('rehab')) {
+    return 'Bidang OP';
   }
-  if (text.includes('air') || text.includes('minum') || text.includes('sanitasi') || text.includes('gedung') || text.includes('spam') || text.includes('cipta karya')) {
-    return 'Ditjen Cipta Karya';
+  if (text.includes('kpi') || text.includes('program') || text.includes('perencanaan') || text.includes('rekomtek') || text.includes('izin')) {
+    return 'Bidang KPI';
   }
-  if (text.includes('rumah') || text.includes('rusun') || text.includes('swadaya') || text.includes('hunian') || text.includes('perumahan')) {
-    return 'Ditjen Perumahan';
+  if (text.includes('pjsa') || text.includes('sungai') || text.includes('pantai') || text.includes('banjir') || text.includes('tanggul')) {
+    return 'Bidang PJSA';
   }
-  if (text.includes('konstruksi') || text.includes('sertifikasi') || text.includes('ska') || text.includes('skk') || text.includes('bina konstruksi')) {
-    return 'Ditjen Bina Konstruksi';
+  if (text.includes('pjpa') || text.includes('irigasi') || text.includes('bendungan') || text.includes('danau') || text.includes('air baku')) {
+    return 'Bidang PJPA';
   }
-  if (text.includes('aset') || text.includes('bmn') || text.includes('tanah') || text.includes('informasi') || text.includes('data')) {
-    return 'Sekretariat Jenderal';
-  }
-  return 'Sekretariat Jenderal';
+  return 'Bagian TU';
 }
 
 // Perbarui Badge Jumlah Laporan Publik di Sidebar & Notifikasi (Dinamis Sesuai 3 Status Warna)
