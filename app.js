@@ -988,6 +988,21 @@ function showView(view) {
       elements.topbarCenterWidgets.style.display = 'flex';
     }
 
+    // Perbarui status badge online (Admin Online atau Disposisi Bidang Tertentu Online)
+    const statusTextEl = document.getElementById('topbarStatusText');
+    const statusPillEl = document.getElementById('topbarStatusPill');
+    if (statusTextEl) {
+      if (currentUser.role === ROLES.SUPER_ADMIN) {
+        statusTextEl.textContent = 'Super Admin Online';
+        if (statusPillEl) statusPillEl.title = 'Super Admin sedang aktif memantau seluruh sistem & disposisi';
+      } else if (currentUser.unit) {
+        statusTextEl.textContent = `${currentUser.unit} Online`;
+        if (statusPillEl) statusPillEl.title = `Petugas dari ${currentUser.unit} sedang aktif terkoneksi`;
+      } else {
+        statusTextEl.textContent = 'Admin Online';
+      }
+    }
+
     // Tampilkan info user di header atas
     elements.navUserPanel.style.display = 'flex';
     elements.navUserName.textContent = currentUser.nama;
