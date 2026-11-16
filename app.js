@@ -2536,7 +2536,9 @@ function renderInboxPublicPage() {
     const isBidang = currentUser && currentUser.role === ROLES.BIDANG;
     const isDisposisiValid = currentUnit && currentUnit !== 'Belum Didisposisi';
 
-    // Kolom Surat Balasan (Bisa dibuat oleh Bidang, Seker/Sakres, maupun Super Admin)
+    // Kolom Surat Balasan:
+    // Super Admin HANYA menentukan Disposisi (tidak mengunggah/membuat balasan).
+    // Yang mengunggah/membuat balasan adalah Bidang tujuan disposisi atau Petugas Sakres.
     const isSakres = currentUser && currentUser.role === ROLES.SAKRES;
     let balasanHtml = '';
     if (r.replyLetter) {
@@ -2550,7 +2552,15 @@ function renderInboxPublicPage() {
           </button>
         </div>
       `;
-    } else if (isSakres || isSuperAdmin || isBidang) {
+    } else if (isSuperAdmin) {
+      // Super Admin hanya melihat status arahan disposisi
+      if (currentUnit && currentUnit !== 'Belum Didisposisi') {
+        balasanHtml = `<span style="font-size:0.75rem; color:#0284C7; font-weight:700;">Menunggu Balasan dari ${escapeHtml(currentUnit)}</span>`;
+      } else {
+        balasanHtml = `<span style="font-size:0.75rem; color:#D97706; font-weight:700;">Pilih Disposisi Terlebih Dahulu</span>`;
+      }
+    } else if (isSakres || isBidang) {
+      // Jika akun Bidang / Sakres: mereka yang punya wewenang unggah surat balasan
       balasanHtml = `
         <div style="text-align:center;">
           <button type="button" class="btn-opsi" onclick="openModalSakres('${escapeHtml(r.ticket)}')" style="font-size:0.75rem; padding:0.35rem 0.65rem; background:#153E75; color:#fff; font-weight:700; border:none; border-radius:4px; box-shadow:0 2px 6px rgba(21,62,117,0.25);">
